@@ -2,7 +2,7 @@ const path = require("path");
 const { createLogger, format, transports } = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
 
-const { combine, timestamp, label, printf, prettyPrint } = format;
+const { combine, timestamp, label, printf } = format;
 
 // Custom Log Format
 const myFormat = printf(({ level, message, label, timestamp }) => {

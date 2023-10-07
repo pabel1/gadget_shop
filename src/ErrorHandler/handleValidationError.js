@@ -1,12 +1,8 @@
-const mongoose = require("mongoose");
-
 const handleValidationError = (error) => {
-  const errors = Object.values(error.errors).map((el) => {
-    return {
-      path: el.path,
-      message: el.message,
-    };
-  });
+  const errors = Object.values(error.errors).map((el) => ({
+    path: el.path,
+    message: el.message,
+  }));
   const statusCode = 400;
   return {
     statusCode,

@@ -1,13 +1,12 @@
-const { Server } = require("http");
-const { logger, errorLogger } = require("./src/shared/logger");
 const { default: mongoose } = require("mongoose");
+const { logger, errorLogger } = require("./src/shared/logger");
 const config = require("./src/config/config");
-
+const app = require("./index");
 async function main() {
   try {
-    await mongoose.connect(config.Database_URL);
-    console.log(`Database connected Successfully!!`);
-    logger.info(`Database connected Successfully!!`);
+    await mongoose.connect(config.database_url);
+    console.log("Database connected Successfully!!");
+    logger.info("Database connected Successfully!!");
 
     const server = app.listen(config.port, () => {
       logger.info(`Server running on port ${config.port}`);
@@ -19,7 +18,7 @@ async function main() {
           logger.info("Server closed");
         });
       }
-      process.exit(1);
+      throw new Error("Application exited with an error"); // Throw an error instead
     };
 
     const unexpectedErrorHandler = (error) => {
