@@ -2,6 +2,7 @@ const cors = require("cors");
 const express = require("express");
 const httpStatus = require("http-status");
 const globalErrorHandler = require("./src/Middleware/globalErrorHandler");
+const router = require("./src/routes");
 
 const app = express();
 
@@ -10,7 +11,7 @@ app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
 // define routes
-// app.use('/api/v1', router);
+app.use("/api/v1", router);
 
 // global error handler
 app.use(globalErrorHandler);
