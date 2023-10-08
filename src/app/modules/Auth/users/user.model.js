@@ -50,6 +50,16 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", async function (next) {
+  // Hashing user password
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    config.bcrypt_salt_rounds || 10
+  );
+  next();
+});
+
 const UserModel = mongoose.model("users", userSchema);
 
 module.exports = UserModel;

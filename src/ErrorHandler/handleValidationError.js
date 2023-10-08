@@ -1,13 +1,13 @@
 const handleValidationError = (error) => {
-  const errors = Object.values(error.errors).map((el) => ({
-    path: el.path,
-    message: el.message,
+  const errorMessages = error.details.map((detail) => ({
+    field: detail.context.key,
+    message: detail.message,
   }));
   const statusCode = 400;
   return {
     statusCode,
     message: "Validation Error",
-    errorMessages: errors,
+    errorMessages,
   };
 };
 
