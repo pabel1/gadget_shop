@@ -45,7 +45,33 @@ const userRegistration = catchAsyncError(async (req, res) => {
   });
 });
 
+const userLogin = catchAsyncError(async (req, res) => {
+  const result = await userServices.loginUserInToDB(req.body);
+  const { refreshToken, accessToken, user } = result;
+
+  if (refreshToken && accessToken && user) {
+    let cookieOptions = {
+      secure: config.env === "production",
+      httpOnly: true,
+    };
+
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+    res.cookie("accessToken", accessToken, cookieOptions);
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Login successfully",
+    data: {
+      user,
+      accessToken,
+    },
+  });
+});
+
 const userController = {
   userRegistration,
+  userLogin,
 };
 module.exports = userController;

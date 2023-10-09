@@ -3,6 +3,7 @@ const config = require("../../../../config/config");
 const jwtHandle = require("../../../../shared/createToken");
 const UserModel = require("./user.model");
 const httpStatus = require("http-status");
+const bcrypt = require("bcrypt");
 const createUserInToDB = async (payload) => {
   const user = await UserModel.findOne({ email: payload?.email });
   if (user) {
@@ -29,9 +30,48 @@ const createUserInToDB = async (payload) => {
   console.log(accessToken);
   return { userData, accessToken, refreshToken };
 };
+const loginUserInToDB = async (payload) => {
+  const { email, password } = payload;
+
+  const isExistUser = await UserModel.findOne({
+    email,
+  });
+
+  const { _id } = isExistUser;
+
+  if (!isExistUser) {
+    throw new ErrorHandler("User does not exist", httpStatus.NOT_FOUND);
+  }
+
+  const isMatchPassword = async () => {
+    return await bcrypt.compare(password, isExistUser?.password);
+  };
+
+  if (!isMatchPassword) {
+    throw new ErrorHandler("Invalid credentials", httpStatus.UNAUTHORIZED);
+  }
+
+  const accessToken = await jwtHandle(
+    { id: _id, email: email },
+    config.jwt_key,
+    config.jwt_token_expire
+  );
+  const refreshToken = await jwtHandle(
+    { id: _id, email: email },
+    config.jwt_refresh_key,
+    config.jwt_refresh_token_expire
+  );
+
+  return {
+    user: isExistUser,
+    accessToken,
+    refreshToken,
+  };
+};
 
 const userServices = {
   createUserInToDB,
+  loginUserInToDB,
 };
 
 module.exports = userServices;
