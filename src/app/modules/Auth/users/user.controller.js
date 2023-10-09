@@ -5,6 +5,7 @@ const userServices = require("./user.services");
 const cloudinaryUploader = require("../../../../Middleware/cloudinaryUpload");
 const sendResponse = require("../../../../shared/sendResponse");
 const httpStatus = require("http-status");
+const config = require("../../../../config/config");
 const userRegistration = catchAsyncError(async (req, res) => {
   const file = req.file;
   const folderName = "user";
@@ -21,12 +22,26 @@ const userRegistration = catchAsyncError(async (req, res) => {
   }
 
   const result = await userServices.createUserInToDB(req.body);
+  const { refreshToken, accessToken, userData } = result;
+
+  if (refreshToken && accessToken && userData) {
+    let cookieOptions = {
+      secure: config.env === "production",
+      httpOnly: true,
+    };
+
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+    res.cookie("accessToken", accessToken, cookieOptions);
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: "User created successfully",
-    data: result,
+    data: {
+      userData,
+      accessToken,
+    },
   });
 });
 
