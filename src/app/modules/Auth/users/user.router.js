@@ -2,13 +2,22 @@ const express = require("express");
 const userController = require("./user.controller");
 const userJoiSchema = require("./user.validation");
 const validateRequest = require("../../../../Middleware/validateRequest");
+const FileUploadHelper = require("../../../../Middleware/uploadMiddleware");
 
 const router = express.Router();
 
 router.post(
   "/create",
-  validateRequest(userJoiSchema),
-  userController.userRegistration
+
+  FileUploadHelper.upload.single("image"),
+  async (req, res, next) => {
+    try {
+      await userJoiSchema.validateAsync(req.body);
+      await userController.userRegistration(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 const userRouter = router;
 

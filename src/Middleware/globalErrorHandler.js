@@ -55,6 +55,9 @@ const globalErrorHandler = (error, req, res, next) => {
   } else if (error instanceof mongoose.Error) {
     message = error.message;
     errorMessages = error.message ? [{ path: "", message: error.message }] : [];
+  } else if (error && error.name === "Application exited with an error") {
+    message = error.message;
+    errorMessages = error.message ? [{ path: "", message: error.message }] : [];
   }
 
   res.status(statusCode).json({
