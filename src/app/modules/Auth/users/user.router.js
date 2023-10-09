@@ -8,16 +8,9 @@ const router = express.Router();
 
 router.post(
   "/create",
-
   FileUploadHelper.upload.single("image"),
-  async (req, res, next) => {
-    try {
-      await userJoiSchema.validateAsync(req.body);
-      await userController.userRegistration(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
+  validateRequest(userJoiSchema),
+  userController.userRegistration
 );
 const userRouter = router;
 

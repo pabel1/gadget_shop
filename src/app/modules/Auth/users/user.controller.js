@@ -1,12 +1,11 @@
 const catchAsyncError = require("../../../../ErrorHandler/catchAsyncError");
-const ErrorHandler = require("../../../../ErrorHandler/errorHandler");
-const bcrypt = require("bcrypt");
+
 const userServices = require("./user.services");
-const FileUploadHelper = require("../../../../Middleware/uploadMiddleware");
+
 const cloudinaryUploader = require("../../../../Middleware/cloudinaryUpload");
 const sendResponse = require("../../../../shared/sendResponse");
 const httpStatus = require("http-status");
-const userRegistration = catchAsyncError(async (req, res, next) => {
+const userRegistration = catchAsyncError(async (req, res) => {
   const file = req.file;
   const folderName = "user";
   const uploadedImage = await cloudinaryUploader.uploadToCloudinary(
