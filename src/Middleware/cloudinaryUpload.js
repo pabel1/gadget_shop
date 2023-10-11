@@ -11,7 +11,7 @@ const uploadToCloudinary = async (file, folder = "") => {
       cloudinary.uploader.upload(file.path, options, (error, result) => {
         fs.unlinkSync(file.path);
         if (error) {
-          console.log("c");
+       
 
           reject(error);
         } else {
