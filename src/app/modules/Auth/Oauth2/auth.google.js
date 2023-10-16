@@ -10,7 +10,7 @@ passport.use(
     {
       clientID: config.googleClientID,
       clientSecret: config.googleClientSecret,
-      callbackURL: config.googleCallbackURL,
+      callbackURL: config.googleCallbackURL || "/auth/google/callback",
       scope: ["profile", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -44,7 +44,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
 
 passport.deserializeUser(async (id, done) => {
