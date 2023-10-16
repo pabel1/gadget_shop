@@ -17,4 +17,7 @@ module.exports = {
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET,
   },
+  googleClientID: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  googleCallbackURL: process.env.CALL_BACK_URL,
 };
