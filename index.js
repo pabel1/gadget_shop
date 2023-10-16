@@ -6,11 +6,19 @@ const globalErrorHandler = require("./src/Middleware/globalErrorHandler");
 const router = require("./src/routes");
 const passport = require("passport");
 const session = require("express-session");
+const config = require("./src/config/config");
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: true,
+    secret: config.googleClientSecret,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 // define routes

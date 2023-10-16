@@ -3,13 +3,6 @@ const express = require("express");
 const passport = require("passport");
 const router = express.Router();
 
-router.get("/login/failed", (req, res) => {
-  res.status(401).json({
-    error: true,
-    message: "Log in failure",
-  });
-});
-
 //   for google authentication using O auth2.0 with passport js
 router.get(
   "/google",
