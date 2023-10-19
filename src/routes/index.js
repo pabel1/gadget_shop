@@ -1,6 +1,6 @@
 const express = require("express");
 const userRouter = require("../app/modules/Auth/users/user.router");
-const authRouter = require("../app/modules/Auth/Oauth2/auth.route");
+const googleauthRouter = require("../app/modules/Auth/Oauth2/google.auth.route");
 
 const router = express.Router();
 
@@ -10,8 +10,8 @@ const routes = [
     route: userRouter,
   },
   {
-    path: "/auth",
-    route: authRouter,
+    path: "/auth/google/",
+    route: googleauthRouter,
   },
 ];
 

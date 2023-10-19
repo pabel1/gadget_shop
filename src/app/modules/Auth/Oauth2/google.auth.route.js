@@ -36,6 +36,6 @@ router.get("/auth/google/error", function (req, res) {
   console.log("error", { req, res });
 });
 
-const authRouter = router;
+const googleauthRouter = router;
 
-module.exports = authRouter;
+module.exports = googleauthRouter;
