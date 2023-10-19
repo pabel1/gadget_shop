@@ -10,21 +10,6 @@ router.get(
 );
 
 router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: process.env.CLIENT_URL,
-    failureRedirect: "/login/failed",
-    failureMessage: true,
-  }),
-  function (req, res) {
-    //failure message
-    console.log(req.session.messages);
-    // Successful authentication, redirect success.
-    res.redirect("");
-  }
-);
-
-router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     successRedirect: "/auth/google/success",
@@ -36,7 +21,7 @@ router.get(
     console.log(req.session.messages);
     // Successful authentication, redirect success.
     res.redirect(
-      "https://traveller-system-mern-eta.vercel.app/verification-success/"
+      "https://traveller-system-mern-eta.vercel.app/verification-success/" //demo url like frontend url
     );
   }
 );

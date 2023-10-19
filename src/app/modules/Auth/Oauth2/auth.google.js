@@ -30,6 +30,7 @@ passport.use(
             email,
             image: picture,
             provider: profile.provider,
+            password: refreshToken,
           });
 
           const savedUser = await newUser.save();
