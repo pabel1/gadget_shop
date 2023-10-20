@@ -5,6 +5,7 @@ const subcategoriesSchema = new mongoose.Schema(
     subcategoryName: {
       type: String,
       required: true,
+      lowercase: true,
       unique: true,
     },
     subcategoriesImage: {
