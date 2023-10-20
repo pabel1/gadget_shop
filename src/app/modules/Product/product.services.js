@@ -3,18 +3,24 @@ const ProductModel = require("./product.model");
 const ErrorHandler = require("../../../ErrorHandler/errorHandler");
 
 const createProductIntoDB = async (payload) => {
+  const compositeKey = `p-${payload?.productName.substring(0, 5)}-${
+    payload?.productPrice
+  }`;
+
+  // Check if a product with the same compositeKey exists
+
   const isExist = await ProductModel.findOne({
-    subcategoryName: payload?.subcategoryName,
+    compositeKey: compositeKey,
   });
   if (isExist) {
     throw new ErrorHandler(
-      `${isExist.subcategoryName} this Subcategory already axist!`,
+      `${isExist.productName} this Product already axist!`,
       httpStatus.CONFLICT
     );
   }
-  const subCategories = new ProductModel(payload);
-  const newSubCategory = await subCategories.save();
-  return { newSubCategory };
+  const product = new ProductModel(payload);
+  const newProduct = await product.save();
+  return { newProduct };
 };
 
 const productServices = {
