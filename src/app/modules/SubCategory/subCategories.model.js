@@ -1,34 +1,32 @@
 const mongoose = require("mongoose");
 
-const categoriesSchema = new mongoose.Schema(
+const subcategoriesSchema = new mongoose.Schema(
   {
-    categoryName: {
+    subcategoryName: {
       type: String,
       required: true,
       unique: true,
     },
-    categoriesImage: {
+    subcategoriesImage: {
       secure_url: {
         type: String,
-        required: true,
       },
       public_id: {
         type: String,
-        required: true,
       },
     },
 
-    categoryTag: {
+    subcategoryTag: {
       type: String,
     },
-    discount: {
+    status: {
       type: Boolean,
     },
 
-    subCategory: [
+    categories: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "SubCategories",
+        ref: "Categories",
       },
     ],
 
@@ -45,6 +43,6 @@ const categoriesSchema = new mongoose.Schema(
   }
 );
 
-const CategoriesModel = mongoose.model("categories", categoriesSchema);
+const SubcategoriesModel = mongoose.model("subcategories", subcategoriesSchema);
 
-module.exports = CategoriesModel;
+module.exports = SubcategoriesModel;
