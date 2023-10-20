@@ -1,6 +1,7 @@
 const express = require("express");
 const userRouter = require("../app/modules/Auth/users/user.router");
 const googleauthRouter = require("../app/modules/Auth/Oauth2/google.auth.route");
+const categoriesRouter = require("../app/modules/Category/category.router");
 
 const router = express.Router();
 
@@ -12,6 +13,10 @@ const routes = [
   {
     path: "/auth/google/",
     route: googleauthRouter,
+  },
+  {
+    path: "/categories",
+    route: categoriesRouter,
   },
 ];
 

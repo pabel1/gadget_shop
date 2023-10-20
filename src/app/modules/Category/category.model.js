@@ -5,9 +5,10 @@ const categoriesSchema = new mongoose.Schema(
     categoryName: {
       type: String,
       required: true,
+      unique: true,
     },
     categoriesImage: {
-      url: {
+      secure_url: {
         type: String,
         required: true,
       },
@@ -37,6 +38,6 @@ const categoriesSchema = new mongoose.Schema(
   }
 );
 
-const CategoriesSchema = mongoose.model("categories", categoriesSchema);
+const CategoriesModel = mongoose.model("categories", categoriesSchema);
 
-module.exports = CategoriesSchema;
+module.exports = CategoriesModel;
