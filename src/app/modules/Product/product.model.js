@@ -63,12 +63,24 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Rating",
     },
+    compositeKey: {
+      type: String,
+      unique: true, // Ensures uniqueness of the composite key
+      required: true,
+    },
   },
   {
     timestamps: true,
     versionKey: false,
   }
 );
+
+// composite key created for uniqueness
+productSchema.pre("save", function (next) {
+  const truncatedName = this.productName.substring(0, 5); // Truncate product name to at most 5 characters
+  this.compositeKey = `p-${truncatedName}-${this.productPrice}`;
+  next();
+});
 
 const ProductModel = mongoose.model("Product", productSchema);
 
