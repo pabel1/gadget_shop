@@ -4,6 +4,7 @@ const userController = require("./user.controller");
 const validateRequest = require("../../../../Middleware/validateRequest");
 const FileUploadHelper = require("../../../../Middleware/uploadMiddleware");
 const JoiValidationSchema = require("./user.validation");
+const authVerification = require("../../../../Middleware/authVarification");
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.post(
   validateRequest(JoiValidationSchema.loginSchema),
   userController.userLogin
 );
+router.get("/logged-in-user", authVerification, userController.loggedInUser);
 
 const userRouter = router;
 

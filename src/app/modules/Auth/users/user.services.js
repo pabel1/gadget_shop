@@ -69,9 +69,20 @@ const loginUserInToDB = async (payload) => {
   };
 };
 
+const loggedInUserFromDB = async (userID) => {
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    throw new ErrorHandler("User not found", httpStatus.NOT_FOUND);
+  }
+  return {
+    user,
+  };
+};
+
 const userServices = {
   createUserInToDB,
   loginUserInToDB,
+  loggedInUserFromDB,
 };
 
 module.exports = userServices;
