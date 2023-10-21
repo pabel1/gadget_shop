@@ -21,6 +21,12 @@ router.post(
 );
 router.get("/logged-in-user", authVerification, userController.loggedInUser);
 
+router.get(
+  "/refresh-token",
+  validateRequest(JoiValidationSchema.refreshTokenJoiSchema),
+  userController.refreshToken
+);
+
 const userRouter = router;
 
 module.exports = userRouter;
