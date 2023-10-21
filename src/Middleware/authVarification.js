@@ -1,12 +1,20 @@
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("../ErrorHandler/errorHandler");
 const UserModel = require("../app/modules/Auth/users/user.model");
+const httpStatus = require("http-status");
 
 const authVerification = async (req, res, next) => {
-  const { authorization } = req.headers;
-  const token = authorization?.split(" ")[1];
+  let token;
+  if (req.cookies.access_token) {
+    token = req.cookies.access_token;
+  } else {
+    const { authorization } = req.headers;
+
+    token = authorization?.split(" ")[1];
+  }
+
   try {
-    if (!token || !authorization) {
+    if (!token) {
       throw new ErrorHandler("Please login to access the resource", 401);
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -24,7 +32,7 @@ const authVerification = async (req, res, next) => {
     req.email = email;
     next();
   } catch (error) {
-    next("Authentication Failed!");
+    next("Authentication Failed!", httpStatus.UNAUTHORIZED);
   }
 };
 

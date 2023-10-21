@@ -1,6 +1,7 @@
 /* eslint-disable node/no-extraneous-require */
 const cors = require("cors");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const httpStatus = require("http-status");
 const globalErrorHandler = require("./src/Middleware/globalErrorHandler");
 const router = require("./src/routes");
@@ -19,7 +20,7 @@ app.use(
   })
 );
 const corsOptions = createCorsOptions(allowedOrigins);
-
+app.use(cookieParser());
 app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "100mb" }));
