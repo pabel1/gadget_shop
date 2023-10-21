@@ -105,11 +105,23 @@ const refreshToken = catchAsyncError(async (req, res) => {
     },
   });
 });
+// logout
+const logout = catchAsyncError(async (req, res) => {
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Logged out successfully",
+  });
+});
 
 const userController = {
   userRegistration,
   userLogin,
   loggedInUser,
   refreshToken,
+  logout,
 };
 module.exports = userController;
