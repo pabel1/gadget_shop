@@ -86,6 +86,7 @@ const loggedInUser = catchAsyncError(async (req, res) => {
 // get new access token from using  refresh token
 const refreshToken = catchAsyncError(async (req, res) => {
   const { refreshToken } = req.cookies;
+
   const result = await userServices.refreshTokenFromDB(refreshToken);
   // set refresh token into cookie
   const cookieOptions = {

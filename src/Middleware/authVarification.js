@@ -4,16 +4,15 @@ const UserModel = require("../app/modules/Auth/users/user.model");
 const httpStatus = require("http-status");
 
 const authVerification = async (req, res, next) => {
-  let token;
-  if (req.cookies.access_token) {
-    token = req.cookies.access_token;
-  } else {
-    const { authorization } = req.headers;
-
-    token = authorization?.split(" ")[1];
-  }
-
   try {
+    let token;
+    if (req.cookies.access_token) {
+      token = req.cookies.access_token;
+    } else {
+      const { authorization } = req.headers;
+
+      token = authorization?.split(" ")[1];
+    }
     if (!token) {
       throw new ErrorHandler("Please login to access the resource", 401);
     }
@@ -32,7 +31,7 @@ const authVerification = async (req, res, next) => {
     req.email = email;
     next();
   } catch (error) {
-    next("Authentication Failed!", httpStatus.UNAUTHORIZED);
+    next(error, httpStatus.UNAUTHORIZED);
   }
 };
 
