@@ -94,6 +94,7 @@ const refreshToken = catchAsyncError(async (req, res) => {
   };
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("accessToken", result, cookieOptions);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
