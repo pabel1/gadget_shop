@@ -1,6 +1,5 @@
 const httpStatus = require("http-status");
 const catchAsyncError = require("../../../ErrorHandler/catchAsyncError");
-
 const sendResponse = require("../../../shared/sendResponse");
 const SubCategoriesServices = require("./subCategories.services");
 const uploadAndSetImage = require("../../../shared/uploadNeededServices");

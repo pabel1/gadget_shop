@@ -4,6 +4,7 @@ const jwtHandle = require("../../../../shared/createToken");
 const UserModel = require("./user.model");
 const httpStatus = require("http-status");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const createUserInToDB = async (payload) => {
   const user = await UserModel.findOne({ email: payload?.email });
   if (user) {
@@ -69,6 +70,31 @@ const loginUserInToDB = async (payload) => {
   };
 };
 
+const refreshTokenFromDB = async (token) => {
+  try {
+    const decoded = jwt.verify(token, config.jwt_refresh_key);
+    const { userId } = decoded;
+
+    const isUserExist = await UserModel.findById(userId);
+
+    if (!isUserExist) {
+      throw new ErrorHandler("User does not exist", httpStatus.NOT_FOUND);
+    }
+
+    const accessToken = await jwtHandle(
+      { id: isUserExist?._id, email: isUserExist?.email },
+      config.jwt_key,
+      config.jwt_token_expire
+    );
+
+    return {
+      accessToken,
+    };
+  } catch (error) {
+    throw new ErrorHandler("Invalid Refresh Token", httpStatus.FORBIDDEN);
+  }
+};
+
 const loggedInUserFromDB = async (userID) => {
   const user = await UserModel.findById(userID);
   if (!user) {
@@ -83,6 +109,7 @@ const userServices = {
   createUserInToDB,
   loginUserInToDB,
   loggedInUserFromDB,
+  refreshTokenFromDB,
 };
 
 module.exports = userServices;

@@ -41,9 +41,18 @@ const loginSchema = Joi.object({
   }),
 });
 
+const refreshTokenJoiSchema = Joi.object({
+  cookies: Joi.object({
+    refreshToken: Joi.string()
+      .required()
+      .error(new Error("Refresh Token is required")),
+  }),
+});
+
 const JoiValidationSchema = {
   userJoiSchema,
   loginSchema,
+  refreshTokenJoiSchema,
 };
 
 module.exports = JoiValidationSchema;
