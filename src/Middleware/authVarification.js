@@ -6,8 +6,9 @@ const httpStatus = require("http-status");
 const authVerification = async (req, res, next) => {
   try {
     let token;
-    if (req.cookies.access_token) {
-      token = req.cookies.access_token;
+
+    if (req.cookies.accessToken) {
+      token = req.cookies.accessToken;
     } else {
       const { authorization } = req.headers;
 
