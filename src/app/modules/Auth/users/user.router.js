@@ -21,7 +21,7 @@ router.post(
 );
 router.get("/logged-in-user", authVerification, userController.loggedInUser);
 
-router.get(
+router.post(
   "/refresh-token",
   validateRequest(JoiValidationSchema.refreshTokenJoiSchema),
   userController.refreshToken
