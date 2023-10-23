@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const jwtHandle = async (payload, secret, expireTime) => {
+  console.log(expireTime);
   const token = jwt.sign(
     {
       email: payload?.email,

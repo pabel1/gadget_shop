@@ -73,6 +73,7 @@ const loginUserInToDB = async (payload) => {
 const refreshTokenFromDB = async (token) => {
   try {
     const decoded = jwt.verify(token, config.jwt_refresh_key);
+
     const { userId } = decoded;
 
     const isUserExist = await UserModel.findById(userId);
