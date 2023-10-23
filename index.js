@@ -8,6 +8,7 @@ const router = require("./src/routes");
 const passport = require("passport");
 const session = require("express-session");
 const config = require("./src/config/config");
+require("./src/app/modules/Auth/Oauth2/auth.google");
 const createCorsOptions = require("./src/shared/corsOptions");
 const allowedOrigins = require("./src/constant/corsOrigin");
 const app = express();
