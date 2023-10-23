@@ -54,17 +54,24 @@ const authVerification = async (req, res, next) => {
             config.jwt_refresh_key
           );
           const { email, userId } = refreshTokenDecoded;
-          console.log("refreshTokenDecoded", refreshTokenDecoded);
+
           // If the refreshToken is valid, generate a new accessToken
           const newAccessToken = await jwtHandle(
             { id: userId, email: email },
             config.jwt_key,
             config.jwt_token_expire
           );
-          console.log(newAccessToken);
+
           req.cookies.accessToken = newAccessToken;
 
           //
+          if (newAccessToken) {
+            let cookieOptions = {
+              secure: config.env === "production",
+              httpOnly: true,
+            };
+            res.cookie("accessToken", newAccessToken, cookieOptions);
+          }
 
           const rootUser = await UserModel.findOne({ email: email });
 
