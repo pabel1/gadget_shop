@@ -26,6 +26,20 @@ router.get(
   }
 );
 
+// Route that logs out the authenticated user
+router.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log("Error while destroying session:", err);
+    } else {
+      req.logout(() => {
+        console.log("You are logged out");
+        res.redirect("/home");
+      });
+    }
+  });
+});
+
 router.get("/auth/google/success", function (req, res) {
   // Successful authentication, redirect success.
   console.log("success", { req: req.user, res: res.user });

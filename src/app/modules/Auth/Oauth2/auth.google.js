@@ -12,6 +12,7 @@ passport.use(
       clientSecret: config.googleClientSecret,
       callbackURL: config.googleCallbackURL || "/auth/google/callback",
       scope: ["profile", "email"],
+      passReqToCallback: true,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -30,7 +31,7 @@ passport.use(
             email,
             image: picture,
             provider: profile.provider,
-            password: refreshToken,
+            password: email,
           });
 
           const savedUser = await newUser.save();
