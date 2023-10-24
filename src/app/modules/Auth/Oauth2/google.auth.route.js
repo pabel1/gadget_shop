@@ -5,12 +5,12 @@ const router = express.Router();
 
 //   for google authentication using O auth2.0 with passport js
 router.get(
-  "/google",
+  "/",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 router.get(
-  "/auth/google/callback",
+  "/callback",
   passport.authenticate("google", {
     successRedirect: "/auth/google/success",
     failureRedirect: "/auth/google/error",
@@ -40,12 +40,12 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.get("/auth/google/success", function (req, res) {
+router.get("/success", function (req, res) {
   // Successful authentication, redirect success.
   console.log("success", { req: req.user, res: res.user });
 });
 
-router.get("/auth/google/error", function (req, res) {
+router.get("/error", function (req, res) {
   // error in authentication, redirect success.
   console.log("error", { req, res });
 });
