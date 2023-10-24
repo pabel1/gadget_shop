@@ -10,7 +10,7 @@ passport.use(
     {
       clientID: config.googleClientID,
       clientSecret: config.googleClientSecret,
-      callbackURL: config.googleCallbackURL || "/auth/google/callback",
+      callbackURL: config.googleCallbackURL,
       scope: ["profile", "email"],
       passReqToCallback: true,
     },
