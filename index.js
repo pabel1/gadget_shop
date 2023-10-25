@@ -33,7 +33,6 @@ app.use(passport.session());
 
 // define routes
 app.use("/api/v1", router);
-app.use("auth/google", googleauthRouter);
 
 // global error handler
 app.use(globalErrorHandler);

@@ -31,13 +31,6 @@ const categoriesSchema = new mongoose.Schema(
         ref: "SubCategories",
       },
     ],
-
-    product: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    ],
   },
   {
     timestamps: true,

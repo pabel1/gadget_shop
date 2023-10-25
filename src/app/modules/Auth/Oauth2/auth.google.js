@@ -16,9 +16,10 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const { name, email, picture } = profile._json;
+        console.log("done", done);
 
-        console.log(profile);
+        const { name, email, picture } = done._json;
+
         // Check if the user already exists in the database
         const existUser = await UserModel.findOne({ email });
 

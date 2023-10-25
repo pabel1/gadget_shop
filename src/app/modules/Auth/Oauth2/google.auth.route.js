@@ -20,9 +20,9 @@ router.get(
     //failure message
     console.log(req.session.messages);
     // Successful authentication, redirect success.
-    res.redirect(
-      "https://traveller-system-mern-eta.vercel.app/verification-success/" //demo url like frontend url
-    );
+    // res.redirect(
+    //   "https://traveller-system-mern-eta.vercel.app/verification-success/" //demo url like frontend url
+    // );
   }
 );
 
