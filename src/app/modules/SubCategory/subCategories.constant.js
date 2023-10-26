@@ -1,20 +1,10 @@
 const subCategoryFilterableFields = [
-  "searchTerm",
-  "brandName",
-  "subBrandName",
-  "commissionType",
-  "brand",
-  "subBrand",
+  "subcategoryName",
+  "subcategoryTag",
+  "status",
 ];
 
-const subCategorySearchableFields = [
-  "brandName",
-  "subBrandName",
-  "commissionType",
-  "brandDomain",
-  "brandDescriptions",
-  "brandInfo",
-];
+const subCategorySearchableFields = ["subcategoryName", "subcategoryTag"];
 
 const subCategoriesConstant = {
   subCategoryFilterableFields,
