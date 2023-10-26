@@ -8,7 +8,7 @@ const subcategoriesSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
     },
-    subcategoriesImage: {
+    photo: {
       secure_url: {
         type: String,
       },
@@ -23,13 +23,6 @@ const subcategoriesSchema = new mongoose.Schema(
     status: {
       type: Boolean,
     },
-
-    categories: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Categories",
-      },
-    ],
 
     product: [
       {

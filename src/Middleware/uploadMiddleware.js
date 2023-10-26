@@ -12,7 +12,7 @@ cloudinary.config({
   api_secret: config.cloudinary.api_secret,
 });
 const uploadDir = path.join(__dirname, "..", "uploads");
-console.log(uploadDir);
+// console.log(uploadDir);
 //File Upload directory
 const imageUploadDirectory = `${uploadDir}/image`;
 const fileUploadDirectory = `${uploadDir}/file`;

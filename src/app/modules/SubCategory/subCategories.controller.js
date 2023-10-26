@@ -6,6 +6,7 @@ const uploadAndSetImage = require("../../../shared/uploadNeededServices");
 
 const createSubCategories = catchAsyncError(async (req, res) => {
   const file = req.file;
+
   // if image ned to upload cloudinary then
   const folderName = "SubCategories";
   await uploadAndSetImage(req, file, folderName);
