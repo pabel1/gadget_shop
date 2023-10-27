@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const httpStatus = require("http-status");
 const ErrorHandler = require("../../../ErrorHandler/errorHandler");
 const SubcategoriesModel = require("./subCategories.model");
@@ -22,6 +23,7 @@ const createSubCategoriesIntoDB = async (payload) => {
 
   return newSubCategory;
 };
+
 const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
   const { searchTerm, ...filtersData } = filters;
 

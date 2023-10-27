@@ -18,6 +18,8 @@ router.post(
   subCategoriesController.createSubCategories
 );
 
+router.get("/get-all", subCategoriesController.getAllSubCategoriesFromDB);
+
 const subCategoriesRouter = router;
 
 module.exports = subCategoriesRouter;
