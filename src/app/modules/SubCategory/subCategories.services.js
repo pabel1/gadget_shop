@@ -26,12 +26,11 @@ const createSubCategoriesIntoDB = async (payload) => {
 
 const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
   const { searchTerm, ...filtersData } = filters;
-
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   const pipeline = [];
-  const totalPipeline = [];
+  const totalPipeline = [{ $count: "count" }];
   const matchAnd = [];
 
   //?Dynamic search added
@@ -39,6 +38,7 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
     searchTerm,
     subCategorySearchableFields
   );
+
   if (dynamicSearchQuery) {
     matchAnd.push(dynamicSearchQuery);
   }
@@ -59,10 +59,10 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
   // sorting
 
   const dynamicSorting = sortingHelper.createDynamicSorting(sortBy, sortOrder);
-  console.log(dynamicSorting);
+
   if (dynamicSorting) {
     pipeline.push({
-      $sort: dynamicSorting.sortObject,
+      $sort: dynamicSorting,
     });
   }
 
@@ -76,6 +76,7 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
       $match: { $and: matchAnd },
     });
   }
+
   const result = await SubcategoriesModel.aggregate(pipeline);
   const total = await SubcategoriesModel.aggregate(totalPipeline);
 
@@ -83,7 +84,7 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
     meta: {
       page,
       limit,
-      total,
+      total: total[0]?.count,
     },
     data: result,
   };

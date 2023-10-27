@@ -5,6 +5,7 @@ const SubCategoriesServices = require("./subCategories.services");
 const uploadAndSetImage = require("../../../shared/uploadNeededServices");
 const pick = require("../../../shared/pick");
 const subCategoriesConstant = require("./subCategories.constant");
+const paginationFields = require("../../../constant/pagination");
 
 const createSubCategories = catchAsyncError(async (req, res) => {
   const file = req.file;
@@ -31,10 +32,7 @@ const getAllSubCategoriesFromDB = catchAsyncError(async (req, res) => {
     req.query,
     subCategoriesConstant.subCategoryFilterableFields
   );
-  const paginationOptions = pick(
-    req.query,
-    subCategoriesConstant.subCategorySearchableFields
-  );
+  const paginationOptions = pick(req.query, paginationFields);
   const result = await SubCategoriesServices.getAllSubCategoryFromDB(
     filters,
     paginationOptions
