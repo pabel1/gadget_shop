@@ -1,22 +1,62 @@
 const httpStatus = require("http-status");
 const ErrorHandler = require("../../../ErrorHandler/errorHandler");
 const CategoriesModel = require("./category.model");
+const { default: mongoose } = require("mongoose");
+const SubcategoriesModel = require("../SubCategory/subCategories.model");
 
 const createCategoriesIntoDB = async (payload) => {
-  const isExist = await CategoriesModel.findOne({
-    categoryName: payload?.categoryName,
-  });
-  if (isExist) {
-    throw new ErrorHandler(
-      `${isExist.categoryName} this category already axist!`,
-      httpStatus.CONFLICT
-    );
-  }
-  const category = new CategoriesModel(payload);
-  const newCategory = await category.save();
-  return { newCategory };
-};
+  const session = await mongoose.startSession();
 
+  try {
+    session.startTransaction();
+
+    const { categoryName, subCategory } = payload;
+
+    // Check if the category with the same name already exists
+    const isExist = await CategoriesModel.findOne({ categoryName });
+    if (isExist) {
+      throw new ErrorHandler(
+        `${categoryName} this category already exists!`,
+        httpStatus.CONFLICT
+      );
+    }
+    let subCategoryArray = JSON.parse(subCategory);
+    const newSubCategoryIDs = [];
+    console.log(Array.isArray(subCategory));
+    for (const element of subCategoryArray) {
+      let subcategory;
+
+      // Check if the element has an _id (ObjectID) property
+      if (element._id) {
+        // Subcategory already exists, so just add its ObjectID to the category
+        subcategory = await SubcategoriesModel.findById(element._id);
+      } else {
+        // Subcategory doesn't exist, so create a new subcategory
+        const newSubCategory = new SubcategoriesModel(element);
+        subcategory = await newSubCategory.save({ session });
+      }
+
+      // Add the subcategory's ObjectID to the category's subCategory array
+      newSubCategoryIDs.push(subcategory?._id);
+    }
+
+    if (newSubCategoryIDs.length !== 0) {
+      payload.subCategory = newSubCategoryIDs;
+    }
+    const category = new CategoriesModel(payload);
+    const newCategory = await category.save({ session });
+
+    await session.commitTransaction();
+
+    return newCategory;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error; // Re-throw the error for the error handling middleware to catch
+  } finally {
+    // End the session
+    session.endSession();
+  }
+};
 const CategoriesServices = {
   createCategoriesIntoDB,
 };

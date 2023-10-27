@@ -6,7 +6,7 @@ const categoriesValidationSchema = Joi.object({
     "string.empty": "Category Name cannot be empty.",
     "any.required": "Category Name is required.",
   }),
-  categoriesImage: Joi.object({
+  photo: Joi.object({
     secure_url: Joi.string().required().messages({
       "string.base": "Secure URL must be a string.",
       "string.empty": "Secure URL cannot be empty.",
@@ -17,13 +17,8 @@ const categoriesValidationSchema = Joi.object({
       "string.empty": "Public ID cannot be empty.",
       "any.required": "Public ID is required for the image.",
     }),
-  })
-    .required()
-    .messages({
-      "object.base": "Category Image must be an object.",
-      "object.empty": "Category Image cannot be empty.",
-      "any.required": "Category Image is required.",
-    }),
+  }),
+
   categoryTag: Joi.string().messages({
     "string.base": "Category Tag must be a string.",
   }),

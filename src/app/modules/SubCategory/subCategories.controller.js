@@ -39,7 +39,7 @@ const getAllSubCategoriesFromDB = catchAsyncError(async (req, res) => {
   );
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
     message: "categories created successfully",
     meta: result.meta,

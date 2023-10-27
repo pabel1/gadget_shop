@@ -7,7 +7,7 @@ const categoriesSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    categoriesImage: {
+    photo: {
       secure_url: {
         type: String,
         required: true,
