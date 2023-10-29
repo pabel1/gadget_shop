@@ -11,6 +11,7 @@ const createCategoriesIntoDB = async (payload) => {
     session.startTransaction();
 
     const { categoryName, subCategory } = payload;
+    console.log(subCategory, "subCategory");
 
     // Check if the category with the same name already exists
     const isExist = await CategoriesModel.findOne({ categoryName });
@@ -20,10 +21,11 @@ const createCategoriesIntoDB = async (payload) => {
         httpStatus.CONFLICT
       );
     }
-    let subCategoryArray = JSON.parse(subCategory);
     const newSubCategoryIDs = [];
+
     console.log(Array.isArray(subCategory));
-    for (const element of subCategoryArray) {
+    
+    for (const element of subCategory) {
       let subcategory;
 
       // Check if the element has an _id (ObjectID) property

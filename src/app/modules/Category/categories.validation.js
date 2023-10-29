@@ -18,17 +18,16 @@ const categoriesValidationSchema = Joi.object({
       "any.required": "Public ID is required for the image.",
     }),
   }),
-
   categoryTag: Joi.string().messages({
     "string.base": "Category Tag must be a string.",
   }),
   discount: Joi.boolean().messages({
     "boolean.base": "Discount must be a boolean.",
   }),
-  subCategory: Joi.array().items(Joi.string().guid()).messages({
-    "array.base": "SubCategory must be an array.",
-    "array.includesRequiredUnknowns": "SubCategory contains invalid values.",
-  }),
+  // subCategory: Joi.array().items(Joi.string().guid()).messages({
+  //   "array.base": "SubCategory must be an array.",
+  //   "array.includesRequiredUnknowns": "SubCategory contains invalid values.",
+  // }),
 });
 const JoiCategoriesValidationSchema = {
   categoriesValidationSchema,
