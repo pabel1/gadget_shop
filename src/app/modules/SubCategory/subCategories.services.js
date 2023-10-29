@@ -90,8 +90,26 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
   };
 };
 
+const createSubCategories = async (session, subCategory) => {
+  const newSubCategoryIDs = [];
+
+  for (const element of subCategory) {
+    let subcategory;
+    if (element._id) {
+      subcategory = await SubcategoriesModel.findById(element._id);
+    } else {
+      const newSubCategory = new SubcategoriesModel(element);
+      subcategory = await newSubCategory.save({ session });
+    }
+    newSubCategoryIDs.push(subcategory._id);
+  }
+
+  return newSubCategoryIDs;
+};
+
 const SubCategoriesServices = {
   createSubCategoriesIntoDB,
   getAllSubCategoryFromDB,
+  createSubCategories,
 };
 module.exports = SubCategoriesServices;

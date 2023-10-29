@@ -24,7 +24,7 @@ const createCategoriesIntoDB = async (payload) => {
     const newSubCategoryIDs = [];
 
     console.log(Array.isArray(subCategory));
-    
+
     for (const element of subCategory) {
       let subcategory;
 
@@ -59,8 +59,27 @@ const createCategoriesIntoDB = async (payload) => {
     session.endSession();
   }
 };
+
+const createCategories = async (session, category, newSubCategoryIDs) => {
+  const newCategoryIDs = [];
+
+  for (const element of category) {
+    element.subCategory = newSubCategoryIDs;
+    let categories;
+    if (element._id) {
+      categories = await CategoriesModel.findById(element._id);
+    } else {
+      const newCategory = new CategoriesModel(element);
+      categories = await newCategory.save({ session });
+    }
+    newCategoryIDs.push(categories._id);
+  }
+
+  return newCategoryIDs;
+};
 const CategoriesServices = {
   createCategoriesIntoDB,
+  createCategories,
 };
 
 module.exports = CategoriesServices;
