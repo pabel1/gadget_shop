@@ -7,6 +7,7 @@ const { subCategorySearchableFields } = require("./subCategories.constant");
 const { searchHelper } = require("../../../Helper/searchHelper");
 const { filteringHelper } = require("../../../Helper/filteringHelper");
 const { sortingHelper } = require("../../../Helper/sortingHelper");
+const JoiSubCategoriesValidationSchema = require("./subCategories.validation");
 
 const createSubCategoriesIntoDB = async (payload) => {
   const isExist = await SubcategoriesModel.findOne({
@@ -98,6 +99,13 @@ const createSubCategories = async (session, subCategory) => {
     if (element._id) {
       subcategory = await SubcategoriesModel.findById(element._id);
     } else {
+      const { error } =
+        JoiSubCategoriesValidationSchema.createSubCategoriesValidationSchema.validate(
+          element
+        );
+      if (error) {
+        throw new ErrorHandler(error, httpStatus.BAD_REQUEST);
+      }
       const newSubCategory = new SubcategoriesModel(element);
       subcategory = await newSubCategory.save({ session });
     }

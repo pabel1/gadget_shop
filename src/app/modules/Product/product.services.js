@@ -1,13 +1,10 @@
 const httpStatus = require("http-status");
 const ProductModel = require("./product.model");
 const ErrorHandler = require("../../../ErrorHandler/errorHandler");
-const SubcategoriesModel = require("../SubCategory/subCategories.model");
-const CategoriesModel = require("../Category/category.model");
 const { default: mongoose } = require("mongoose");
-const {
-  createSubCategories,
-} = require("../SubCategory/subCategories.services");
-const { createCategories } = require("../Category/category.services");
+const SubCategoriesServices = require("../SubCategory/subCategories.services");
+const CategoriesServices = require("../Category/category.services");
+const JoiProductValidationSchema = require("./product.validation");
 
 const createProductIntoDB = async (payload) => {
   let { category, subCategory, productTags, product } = payload;
@@ -29,10 +26,13 @@ const createProductIntoDB = async (payload) => {
   try {
     session.startTransaction();
     // SubCategory creation
-    const newSubCategoryIDs = await createSubCategories(session, subCategory);
+    const newSubCategoryIDs = await SubCategoriesServices.createSubCategories(
+      session,
+      subCategory
+    );
 
     // Category creation
-    const newCategoryIDs = await createCategories(
+    const newCategoryIDs = await CategoriesServices.createCategories(
       session,
       category,
       newSubCategoryIDs
@@ -55,6 +55,11 @@ const createProductIntoDB = async (payload) => {
 };
 
 const createProduct = async (session, product) => {
+  const { error } =
+    JoiProductValidationSchema.createProductValidationSchema.validate(product);
+  if (error) {
+    throw new ErrorHandler(error, httpStatus.BAD_REQUEST);
+  }
   const Product = new ProductModel(product);
   return await Product.save({ session });
 };

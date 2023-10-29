@@ -10,11 +10,6 @@ const createSubCategoriesValidationSchema = Joi.object({
   }),
   subcategoryTag: Joi.string(),
   status: Joi.boolean(),
-  categories: Joi.array()
-    .items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/))
-    .messages({
-      "array.base": "Categories must be an array of valid ObjectId strings.",
-    }),
   product: Joi.array()
     .items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/))
     .messages({

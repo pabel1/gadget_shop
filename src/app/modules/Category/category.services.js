@@ -3,6 +3,7 @@ const ErrorHandler = require("../../../ErrorHandler/errorHandler");
 const CategoriesModel = require("./category.model");
 const { default: mongoose } = require("mongoose");
 const SubcategoriesModel = require("../SubCategory/subCategories.model");
+const JoiCategoriesValidationSchema = require("./categories.validation");
 
 const createCategoriesIntoDB = async (payload) => {
   const session = await mongoose.startSession();
@@ -69,6 +70,13 @@ const createCategories = async (session, category, newSubCategoryIDs) => {
     if (element._id) {
       categories = await CategoriesModel.findById(element._id);
     } else {
+      const { error } =
+        JoiCategoriesValidationSchema.categoriesValidationSchema.validate(
+          element
+        );
+      if (error) {
+        throw new ErrorHandler(error, httpStatus.BAD_REQUEST);
+      }
       const newCategory = new CategoriesModel(element);
       categories = await newCategory.save({ session });
     }
