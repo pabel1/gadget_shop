@@ -10,7 +10,6 @@ const session = require("express-session");
 const config = require("./src/config/config");
 const createCorsOptions = require("./src/shared/corsOptions");
 const allowedOrigins = require("./src/constant/corsOrigin");
-const googleauthRouter = require("./src/app/modules/Auth/Oauth2/google.auth.route");
 require("./src/app/modules/Auth/Oauth2/auth.google");
 const app = express();
 
