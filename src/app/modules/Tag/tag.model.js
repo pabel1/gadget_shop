@@ -1,8 +1,4 @@
 const mongoose = require("mongoose");
-const {
-  compositeKeyGenerator,
-} = require("../../../Helper/compositeKeyGenerator");
-
 const tagSchema = new mongoose.Schema(
   {
     tagFor: {

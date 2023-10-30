@@ -4,6 +4,7 @@ const googleauthRouter = require("../app/modules/Auth/Oauth2/google.auth.route")
 const categoriesRouter = require("../app/modules/Category/category.router");
 const subCategoriesRouter = require("../app/modules/SubCategory/subCategories.router");
 const productRouter = require("../app/modules/Product/product.router");
+const tagRouter = require("../app/modules/Tag/tag.route");
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ const routes = [
   {
     path: "/product",
     route: productRouter,
+  },
+  {
+    path: "/tag",
+    route: tagRouter,
   },
 ];
 
