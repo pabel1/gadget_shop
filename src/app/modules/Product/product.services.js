@@ -5,9 +5,10 @@ const { default: mongoose } = require("mongoose");
 const SubCategoriesServices = require("../SubCategory/subCategories.services");
 const CategoriesServices = require("../Category/category.services");
 const JoiProductValidationSchema = require("./product.validation");
+const tagServices = require("../Tag/tag.services");
 
 const createProductIntoDB = async (payload) => {
-  let { category, subCategory, productTags, product } = payload;
+  let { category, subCategory, tags, product } = payload;
 
   const compositeKey = `p-${product?.productName.substring(0, 5)}-${
     product?.productPrice
@@ -38,9 +39,13 @@ const createProductIntoDB = async (payload) => {
       newSubCategoryIDs
     );
 
+    // tagCreation
+    const newTagsIDs = await tagServices.createTag(session, tags);
+
     // Product creation
     product.category = newCategoryIDs;
     product.subCategory = newSubCategoryIDs;
+    product.productTags = newTagsIDs;
     const newProduct = await createProduct(session, product);
 
     await session.commitTransaction();
