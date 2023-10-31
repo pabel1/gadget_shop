@@ -3,6 +3,9 @@ const catchAsyncError = require("../../../ErrorHandler/catchAsyncError");
 const uploadAndSetImage = require("../../../shared/uploadNeededServices");
 const sendResponse = require("../../../shared/sendResponse");
 const productServices = require("./product.services");
+const pick = require("../../../shared/pick");
+const productConstant = require("./product.constant");
+const paginationFields = require("../../../constant/pagination");
 
 const createProduct = catchAsyncError(async (req, res) => {
   const file = req.file;
@@ -11,6 +14,7 @@ const createProduct = catchAsyncError(async (req, res) => {
   await uploadAndSetImage(req, file, folderName);
 
   const result = await productServices.createProductIntoDB(req.body);
+
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -21,7 +25,24 @@ const createProduct = catchAsyncError(async (req, res) => {
   });
 });
 
+const getAllProduct = catchAsyncError(async (req, res) => {
+  const filters = pick(req.query, productConstant.productFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await productServices.geAllProductFromDB(
+    filters,
+    paginationOptions
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "categories created successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 const productController = {
   createProduct,
+  getAllProduct,
 };
 module.exports = productController;

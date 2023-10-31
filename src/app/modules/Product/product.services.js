@@ -69,9 +69,12 @@ const createProduct = async (session, product) => {
   return await Product.save({ session });
 };
 
+const geAllProductFromDB = async (filters, paginationOptions) => {};
+
 const productServices = {
   createProductIntoDB,
   createProduct,
+  geAllProductFromDB,
 };
 
 module.exports = productServices;
