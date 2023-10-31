@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const httpStatus = require("http-status");
 const ProductModel = require("./product.model");
 const ErrorHandler = require("../../../ErrorHandler/errorHandler");
@@ -6,6 +7,14 @@ const SubCategoriesServices = require("../SubCategory/subCategories.services");
 const CategoriesServices = require("../Category/category.services");
 const JoiProductValidationSchema = require("./product.validation");
 const tagServices = require("../Tag/tag.services");
+const { paginationHelpers } = require("../../../Helper/paginationHelper");
+const { searchHelper } = require("../../../Helper/searchHelper");
+const {
+  subCategorySearchableFields,
+} = require("../SubCategory/subCategories.constant");
+const { filteringHelper } = require("../../../Helper/filteringHelper");
+const { sortingHelper } = require("../../../Helper/sortingHelper");
+const { productSearchableFields } = require("./product.constant");
 
 const createProductIntoDB = async (payload) => {
   let { category, subCategory, tags, product } = payload;
@@ -69,7 +78,69 @@ const createProduct = async (session, product) => {
   return await Product.save({ session });
 };
 
-const geAllProductFromDB = async (filters, paginationOptions) => {};
+const geAllProductFromDB = async (filters, paginationOptions) => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const pipeline = [];
+  const totalPipeline = [{ $count: "count" }];
+  const matchAnd = [];
+
+  //?Dynamic search added
+  const dynamicSearchQuery = searchHelper.createSearchQuery(
+    searchTerm,
+    productSearchableFields
+  );
+  if (dynamicSearchQuery) {
+    matchAnd.push(dynamicSearchQuery);
+  }
+  // ? Dynamic filtering added
+  const dynamicFilter = filteringHelper.createDynamicFilter(filtersData);
+
+  if (dynamicFilter) {
+    matchAnd.push(dynamicFilter);
+  }
+  if (skip) {
+    pipeline.push({ $skip: skip });
+  }
+
+  if (limit) {
+    pipeline.push({ $limit: limit });
+  }
+
+  // sorting
+
+  const dynamicSorting = sortingHelper.createDynamicSorting(sortBy, sortOrder);
+
+  if (dynamicSorting) {
+    pipeline.push({
+      $sort: dynamicSorting,
+    });
+  }
+  // if join projection and otherneeded for before match ar unshift then write here
+
+  if (matchAnd.length) {
+    pipeline.unshift({
+      $match: { $and: matchAnd },
+    });
+    totalPipeline.unshift({
+      $match: { $and: matchAnd },
+    });
+  }
+
+  const result = await ProductModel.aggregate(pipeline);
+  const total = await ProductModel.aggregate(totalPipeline);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total: total[0]?.count,
+    },
+    data: result,
+  };
+};
 
 const productServices = {
   createProductIntoDB,
