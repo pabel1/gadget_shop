@@ -67,6 +67,26 @@ const upload = multer({
   },
 });
 
+
+const uploadMiddleware = (req, res, next) => {
+  if (Array.isArray(req.files['images']) || Array.isArray(req.files['files'])) {
+    // Handle multiple uploads
+    return upload.array(['images', 'files'], 10)(req, res, (err) => {
+      if (err) {
+        return res.status(400).send("Error uploading files");
+      }
+      next();
+    });
+  } else {
+    // Handle a single upload
+    return upload.single('image')(req, res, (err) => {
+      if (err) {
+        return res.status(400).send("Error uploading the file");
+      }
+      next();
+    });
+  }
+};
 //  if needed upload cloudinary
 const uploadToCloudinary = async (file) => {
   return new Promise((resolve, reject) => {
@@ -83,6 +103,7 @@ const uploadToCloudinary = async (file) => {
 
 const FileUploadHelper = {
   uploadToCloudinary,
+  uploadMiddleware,
   upload,
 };
 
