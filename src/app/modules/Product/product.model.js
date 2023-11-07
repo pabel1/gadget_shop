@@ -4,11 +4,11 @@ const mongoose = require("mongoose");
 const imageSchema = new mongoose.Schema({
   url: {
     type: String,
-    required: true,
+    // required: true,
   },
   public_id: {
     type: String,
-    required: true,
+    // required: true,
   },
 });
 const productSchema = new mongoose.Schema(

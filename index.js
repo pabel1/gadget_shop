@@ -10,6 +10,7 @@ const session = require("express-session");
 const config = require("./src/config/config");
 const createCorsOptions = require("./src/shared/corsOptions");
 const allowedOrigins = require("./src/constant/corsOrigin");
+const bodyParser = require("body-parser");
 require("./src/app/modules/Auth/Oauth2/auth.google");
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "100mb" }));
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
 app.use(passport.initialize());

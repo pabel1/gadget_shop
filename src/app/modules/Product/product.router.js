@@ -10,7 +10,7 @@ const router = express.Router();
 router.post(
   "/create",
   FileUploadHelper.upload.single("image"),
-  validateRequest(JoiProductValidationSchema.createProductValidationSchema),
+  // validateRequest(JoiProductValidationSchema.createProductValidationSchema),
   productController.createProduct
 );
 
