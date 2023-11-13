@@ -68,11 +68,12 @@ const handleMultipleUploads = (req, res, next) => {
 };
 
 const uploadMiddleware = (req, res, next) => {
-  console.log("first");
+  console.log(req.files);
   if (
-    Array.isArray(req.files[IMAGE_FIELD]) ||
-    Array.isArray(req.files[FILE_FIELD])
+    Array.isArray(req?.files[IMAGE_FIELD]) ||
+    Array.isArray(req?.files[FILE_FIELD])
   ) {
+    console.log("multiple");
     return handleMultipleUploads(req, res, next);
   } else {
     return handleSingleUpload(req, res, next);
