@@ -1,37 +1,36 @@
 const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 const fs = require("fs");
-
 const path = require("path");
 const config = require("../config/config");
 const CreateUploadsFile = require("../utility/mikDirectory.uploadhelper");
+
+const IMAGE_FIELD = "images";
+const FILE_FIELD = "files";
 
 cloudinary.config({
   cloud_name: config.cloudinary.cloud_name,
   api_key: config.cloudinary.api_key,
   api_secret: config.cloudinary.api_secret,
 });
+
 const uploadDir = path.join(__dirname, "..", "uploads");
-// console.log(uploadDir);
-//File Upload directory
 const imageUploadDirectory = `${uploadDir}/image`;
 const fileUploadDirectory = `${uploadDir}/file`;
 
-// Create Upload directory if not exist.
 const directory = [imageUploadDirectory, fileUploadDirectory];
-// create upload file function
 CreateUploadsFile(directory);
 
-// File Upload storage and file name
+const dynamicDestination = (fieldName) => {
+  return (req, file, cb) => {
+    const uploadPath =
+      fieldName === IMAGE_FIELD ? imageUploadDirectory : fileUploadDirectory;
+    cb(null, uploadPath);
+  };
+};
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === "image") {
-      cb(null, imageUploadDirectory);
-    }
-    if (file.fieldname === "files") {
-      cb(null, fileUploadDirectory);
-    }
-  },
+  destination: dynamicDestination(),
   filename: (req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
     const fileName =
@@ -47,47 +46,67 @@ const storage = multer.diskStorage({
   },
 });
 
+const handleUploadErrors = (err, req, res, next) => {
+  if (err) {
+    return res
+      .status(400)
+      .send(`Error uploading ${req.files ? "files" : "file"}`);
+  }
+  next();
+};
+
+const handleSingleUpload = (req, res, next) => {
+  return upload.single(IMAGE_FIELD)(req, res, (err) =>
+    handleUploadErrors(err, req, res, next)
+  );
+};
+
+const handleMultipleUploads = (req, res, next) => {
+  return upload.array([IMAGE_FIELD, FILE_FIELD], 10)(req, res, (err) =>
+    handleUploadErrors(err, req, res, next)
+  );
+};
+
+const uploadMiddleware = (req, res, next) => {
+  console.log("first");
+  if (
+    Array.isArray(req.files[IMAGE_FIELD]) ||
+    Array.isArray(req.files[FILE_FIELD])
+  ) {
+    return handleMultipleUploads(req, res, next);
+  } else {
+    return handleSingleUpload(req, res, next);
+  }
+};
+
+const imageExtensions = ["jpg", "jpeg", "png", "webp"];
+const fileExtensions = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
+
+const fileFilter = (req, file, cb) => {
+  const validExtensions =
+    file.fieldname === IMAGE_FIELD ? imageExtensions : fileExtensions;
+
+  if (
+    !file.originalname.match(new RegExp(`\\.(${validExtensions.join("|")})$`))
+  ) {
+    return cb(
+      new Error(
+        `Please upload a ${file.fieldname === IMAGE_FIELD ? "image" : "file"}`
+      )
+    );
+  }
+
+  cb(null, true);
+};
+
 const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5000000,
   },
-  fileFilter(req, file, cb) {
-    if (file.fieldname === "images" || file.fieldname === "image") {
-      if (!file.originalname.match(/\.(jpg|jpeg|png|webp)$/)) {
-        return cb(new Error("Please upload an image"));
-      }
-    }
-    if (file.fieldname === "files" || file.fieldname === "file") {
-      if (!file.originalname.match(/\.(pdf|doc|docx|xls|xlsx|ppt|pptx)$/)) {
-        return cb(new Error("Please upload a file"));
-      }
-    }
-    cb(null, true);
-  },
+  fileFilter: fileFilter,
 });
 
-
-const uploadMiddleware = (req, res, next) => {
-  if (Array.isArray(req.files['images']) || Array.isArray(req.files['files'])) {
-    // Handle multiple uploads
-    return upload.array(['images', 'files'], 10)(req, res, (err) => {
-      if (err) {
-        return res.status(400).send("Error uploading files");
-      }
-      next();
-    });
-  } else {
-    // Handle a single upload
-    return upload.single('image')(req, res, (err) => {
-      if (err) {
-        return res.status(400).send("Error uploading the file");
-      }
-      next();
-    });
-  }
-};
-//  if needed upload cloudinary
 const uploadToCloudinary = async (file) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(file.path, (error, result) => {
