@@ -41,6 +41,7 @@ const getAllProduct = catchAsyncError(async (req, res) => {
     data: result.data,
   });
 });
+
 const productController = {
   createProduct,
   getAllProduct,
