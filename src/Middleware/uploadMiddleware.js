@@ -68,15 +68,25 @@ const handleMultipleUploads = (req, res, next) => {
 };
 
 const uploadMiddleware = (req, res, next) => {
-  console.log(req.files);
-  if (
-    Array.isArray(req?.files[IMAGE_FIELD]) ||
-    Array.isArray(req?.files[FILE_FIELD])
-  ) {
-    console.log("multiple");
-    return handleMultipleUploads(req, res, next);
-  } else {
-    return handleSingleUpload(req, res, next);
+  try {
+    console.log(req.files);
+    if (!req.files) {
+      throw new Error("No files found in the request.");
+    }
+
+    const images = req.files[IMAGE_FIELD];
+    const files = req.files[FILE_FIELD];
+
+    if (Array.isArray(images) || Array.isArray(files)) {
+      console.log("Multiple files detected");
+      return handleMultipleUploads(req, res, next);
+    } else {
+      console.log("Single file detected");
+      return handleSingleUpload(req, res, next);
+    }
+  } catch (error) {
+    console.error("Error in uploadMiddleware:", error.message);
+    return res.status(400).send("Error processing file upload.");
   }
 };
 
