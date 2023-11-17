@@ -77,10 +77,8 @@ const uploadMiddleware = (req, res, next) => {
     const files = req.files[FILE_FIELD];
 
     if (Array.isArray(images) || Array.isArray(files)) {
-      console.log("Multiple files detected");
       return handleMultipleUploads(req, res, next);
     } else {
-      console.log("Single file detected");
       return handleSingleUpload(req, res, next);
     }
   } catch (error) {
