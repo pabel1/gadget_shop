@@ -69,7 +69,6 @@ const handleMultipleUploads = (req, res, next) => {
 
 const uploadMiddleware = (req, res, next) => {
   try {
-    console.log(req.files);
     if (!req.files) {
       throw new Error("No files found in the request.");
     }
