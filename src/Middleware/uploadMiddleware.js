@@ -82,7 +82,6 @@ const uploadMiddleware = (req, res, next) => {
       return handleSingleUpload(req, res, next);
     }
   } catch (error) {
-    console.error("Error in uploadMiddleware:", error.message);
     return res.status(400).send("Error processing file upload.");
   }
 };
