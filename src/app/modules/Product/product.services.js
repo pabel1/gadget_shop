@@ -17,8 +17,6 @@ const { productSearchableFields } = require("./product.constant");
 const createProductIntoDB = async (payload) => {
   let { category, subCategory, tags, product } = payload;
 
-  console.log(category);
-  console.log(JSON.parse(category), "parse category");
   const compositeKey = `p-${product?.productName.substring(0, 5)}-${
     product?.productPrice
   }`;
