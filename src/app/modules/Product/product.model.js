@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const generateSlug = require("../../../shared/generateSlug");
 
 // product image Schema
 const imageSchema = new mongoose.Schema({
@@ -68,6 +69,12 @@ const productSchema = new mongoose.Schema(
       unique: true, // Ensures uniqueness of the composite key
       required: true,
     },
+    slug: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true,
+    },
   },
   {
     timestamps: true,
@@ -79,6 +86,12 @@ const productSchema = new mongoose.Schema(
 productSchema.pre("save", function (next) {
   const truncatedName = this.productName.substring(0, 5); // Truncate product name to at most 5 characters
   this.compositeKey = `p-${truncatedName}-${this.productPrice}`;
+
+  // Generate slug only if the productName has changed or if it's a new document
+  if (this.isModified("productName") || this.isNew) {
+    this.slug = generateSlug(this.productName);
+  }
+
   next();
 });
 
