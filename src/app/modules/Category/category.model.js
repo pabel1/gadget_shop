@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const generateSlug = require("../../../shared/generateSlug");
 
 const categoriesSchema = new mongoose.Schema(
   {
@@ -20,6 +21,12 @@ const categoriesSchema = new mongoose.Schema(
     categoryTag: {
       type: String,
     },
+    slug: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true,
+    },
     discount: {
       type: Boolean,
     },
@@ -36,6 +43,15 @@ const categoriesSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+// Middleware to create a slug before saving
+categoriesSchema.pre("save", function (next) {
+  // Generate slug only if the categoryName has changed or if it's a new document
+  if (this.isModified("categoryName") || this.isNew) {
+    this.slug = generateSlug(this.categoryName);
+  }
+  next();
+});
 
 const CategoriesModel = mongoose.model("categories", categoriesSchema);
 
