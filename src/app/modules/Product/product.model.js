@@ -87,7 +87,6 @@ productSchema.pre("save", function (next) {
   const truncatedName = this.productName.substring(0, 5); // Truncate product name to at most 5 characters
   this.compositeKey = `p-${truncatedName}-${this.productPrice}`;
 
-  // Generate slug only if the productName has changed or if it's a new document
   if (this.isModified("productName") || this.isNew) {
     this.slug = generateSlug(this.productName);
   }
