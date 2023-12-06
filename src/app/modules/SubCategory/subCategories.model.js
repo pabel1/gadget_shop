@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const generateSlug = require("../../../shared/generateSlug");
 
 const subcategoriesSchema = new mongoose.Schema(
   {
@@ -20,6 +21,12 @@ const subcategoriesSchema = new mongoose.Schema(
     subcategoryTag: {
       type: String,
     },
+    slug: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true,
+    },
     status: {
       type: Boolean,
     },
@@ -36,6 +43,15 @@ const subcategoriesSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+// Middleware to create a slug before saving
+subcategoriesSchema.pre("save", function (next) {
+  // Generate slug only if the subcategoryName has changed or if it's a new document
+  if (this.isModified("subcategoryName") || this.isNew) {
+    this.slug = generateSlug(this.subcategoryName);
+  }
+  next();
+});
 
 const SubcategoriesModel = mongoose.model("subcategories", subcategoriesSchema);
 
