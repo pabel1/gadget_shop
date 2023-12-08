@@ -54,7 +54,7 @@ const createCategoriesIntoDB = async (payload) => {
     return newCategory;
   } catch (error) {
     await session.abortTransaction();
-    throw error; // Re-throw the error for the error handling middleware to catch
+    throw error;
   } finally {
     // End the session
     session.endSession();
@@ -89,5 +89,4 @@ const CategoriesServices = {
   createCategoriesIntoDB,
   createCategories,
 };
-
 module.exports = CategoriesServices;

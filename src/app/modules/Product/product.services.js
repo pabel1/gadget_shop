@@ -124,7 +124,6 @@ const geAllProductFromDB = async (filters, paginationOptions) => {
       $match: { $and: matchAnd },
     });
   }
-
   const result = await ProductModel.aggregate(pipeline);
   const total = await ProductModel.aggregate(totalPipeline);
 
