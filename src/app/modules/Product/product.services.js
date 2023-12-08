@@ -106,9 +106,7 @@ const geAllProductFromDB = async (filters, paginationOptions) => {
   if (limit) {
     pipeline.push({ $limit: limit });
   }
-
   // sorting
-
   const dynamicSorting = sortingHelper.createDynamicSorting(sortBy, sortOrder);
 
   if (dynamicSorting) {
