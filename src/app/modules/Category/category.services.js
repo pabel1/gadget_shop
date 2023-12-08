@@ -60,7 +60,6 @@ const createCategoriesIntoDB = async (payload) => {
     session.endSession();
   }
 };
-
 const createCategories = async (session, category, newSubCategoryIDs) => {
   const newCategoryIDs = [];
 

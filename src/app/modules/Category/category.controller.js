@@ -6,11 +6,10 @@ const uploadAndSetImage = require("../../../shared/uploadNeededServices");
 
 const createCategories = catchAsyncError(async (req, res) => {
   const file = req.file;
-
   // if image ned to upload cloudinary then
   const folderName = "Categories";
   await uploadAndSetImage(req, file, folderName);
-  console.log("first");
+
   const result = await CategoriesServices.createCategoriesIntoDB(req.body);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
