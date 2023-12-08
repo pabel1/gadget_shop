@@ -58,7 +58,6 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
   }
 
   // sorting
-
   const dynamicSorting = sortingHelper.createDynamicSorting(sortBy, sortOrder);
 
   if (dynamicSorting) {
@@ -77,7 +76,6 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
       $match: { $and: matchAnd },
     });
   }
-
   const result = await SubcategoriesModel.aggregate(pipeline);
   const total = await SubcategoriesModel.aggregate(totalPipeline);
 
