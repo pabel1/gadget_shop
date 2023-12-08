@@ -26,11 +26,7 @@ const tagSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
-// generate compositeKey
-// tagSchema.pre("save", function (next) {
-//     const conpositeKey= compositeKeyGenerator.generateCompositKey({keyFor:})
-//     next();
-//   });
+
 const TagModel = mongoose.model("tag", tagSchema);
 
 module.exports = TagModel;
