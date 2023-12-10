@@ -30,7 +30,7 @@ const dynamicDestination = (fieldName) => {
 };
 
 const storage = multer.diskStorage({
-  destination: dynamicDestination(),
+  destination: dynamicDestination(IMAGE_FIELD), // Pass the field name dynamically
   filename: (req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
     const fileName =
@@ -69,21 +69,26 @@ const handleMultipleUploads = (req, res, next) => {
 
 const uploadMiddleware = (req, res, next) => {
   try {
-    console.log(req);
-    if (!req.files) {
+    if (
+      req.files &&
+      (Array.isArray(req.files[IMAGE_FIELD]) ||
+        Array.isArray(req.files[FILE_FIELD]))
+    ) {
+      console.log(req.files);
+
+      const images = req.files[IMAGE_FIELD];
+      const files = req.files[FILE_FIELD];
+
+      if (Array.isArray(images) || Array.isArray(files)) {
+        return handleMultipleUploads(req, res, next);
+      } else {
+        return handleSingleUpload(req, res, next);
+      }
+    } else {
       throw new Error("No files found in the request.");
     }
-
-    console.log(req);
-    const images = req.files[IMAGE_FIELD];
-    const files = req.files[FILE_FIELD];
-
-    if (Array.isArray(images) || Array.isArray(files)) {
-      return handleMultipleUploads(req, res, next);
-    } else {
-      return handleSingleUpload(req, res, next);
-    }
   } catch (error) {
+    console.log(error);
     return res.status(400).send("Error processing file upload.");
   }
 };

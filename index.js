@@ -14,24 +14,22 @@ const bodyParser = require("body-parser");
 require("./src/app/modules/Auth/Oauth2/auth.google");
 const app = express();
 
+const corsOptions = createCorsOptions(allowedOrigins);
+
+app.use(cors(corsOptions));
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(
   session({
     resave: false,
     saveUninitialized: true,
-    secret: config.googleClientSecret, // Replace with a secure, random secret key
+    secret: config.googleClientSecret,
   })
 );
-const corsOptions = createCorsOptions(allowedOrigins);
-app.use(cookieParser());
-app.use(cors(corsOptions));
-
-app.use(express.json({ limit: "100mb" }));
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true, limit: "100mb" }));
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 // define routes
 app.use("/api/v1", router);
 

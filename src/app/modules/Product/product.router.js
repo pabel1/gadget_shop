@@ -4,13 +4,17 @@ const FileUploadHelper = require("../../../Middleware/uploadMiddleware");
 const validateRequest = require("../../../Middleware/validateRequest");
 const JoiProductValidationSchema = require("./product.validation");
 const productController = require("./product.controller");
+const { UploadImageCloudinary } = require("../../../Middleware/upload");
 
 const router = express.Router();
 
 router.post(
   "/create",
-  FileUploadHelper.uploadMiddleware,
-  // validateRequest(JoiProductValidationSchema.createProductValidationSchema),
+  // UploadImageCloudinary.fields(
+  //   imageUploadFields.map((item) => ({ name: item, maxCount: 20 }))
+  // ),
+  UploadImageCloudinary.array("product_image", 20),
+  validateRequest(JoiProductValidationSchema.createProductValidationSchema),
   productController.createProduct
 );
 

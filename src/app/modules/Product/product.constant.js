@@ -15,9 +15,11 @@ const productSearchableFields = [
   "productTags",
   "rating",
 ];
+const imageUploadFields = ["product_image"];
 
 const productConstant = {
   productFilterableFields,
   productSearchableFields,
+  imageUploadFields,
 };
 module.exports = productConstant;
