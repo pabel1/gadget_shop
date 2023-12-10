@@ -6,12 +6,19 @@ const productServices = require("./product.services");
 const pick = require("../../../shared/pick");
 const productConstant = require("./product.constant");
 const paginationFields = require("../../../constant/pagination");
+const validateRequest = require("../../../Middleware/validateRequest");
+const JoiProductValidationSchema = require("./product.validation");
 
 const createProduct = catchAsyncError(async (req, res) => {
   const file = req.file;
+  console.log(req.body);
   // if image ned to upload cloudinary then
   console.log("controller ");
-  const folderName = "Product";
+
+  const { error } =
+    JoiProductValidationSchema.createProductValidationSchema.validate(req.body);
+
+  console.log(error, "21 number line ");
   // await uploadAndSetImage(req, file, folderName);
 
   const result = await productServices.createProductIntoDB(req.body);
