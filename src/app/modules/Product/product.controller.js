@@ -12,7 +12,7 @@ const createProduct = catchAsyncError(async (req, res) => {
   // if image ned to upload cloudinary then
   console.log("controller ");
   const folderName = "Product";
-  await uploadAndSetImage(req, file, folderName);
+  // await uploadAndSetImage(req, file, folderName);
 
   const result = await productServices.createProductIntoDB(req.body);
 
