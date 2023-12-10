@@ -11,12 +11,11 @@ const JoiProductValidationSchema = require("./product.validation");
 
 const createProduct = catchAsyncError(async (req, res) => {
   const file = req.file;
-  console.log(req.body);
+  console.log(JSON.parse(req.body.category));
   // if image ned to upload cloudinary then
   console.log("controller ");
 
-  const { error } =
-    JoiProductValidationSchema.createProductValidationSchema.validate(req.body);
+  JoiProductValidationSchema.createProductValidationSchema.validate(req.body);
   // await uploadAndSetImage(req, file, folderName);
 
   const result = await productServices.createProductIntoDB(req.body);
