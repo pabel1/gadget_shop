@@ -17,8 +17,6 @@ const createProduct = catchAsyncError(async (req, res) => {
 
   const { error } =
     JoiProductValidationSchema.createProductValidationSchema.validate(req.body);
-
-  console.log(error, "21 number line ");
   // await uploadAndSetImage(req, file, folderName);
 
   const result = await productServices.createProductIntoDB(req.body);
