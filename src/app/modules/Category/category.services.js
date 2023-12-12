@@ -79,7 +79,7 @@ const createCategories = async (session, category, newSubCategoryIDs) => {
       const newCategory = new CategoriesModel(element);
       categories = await newCategory.save({ session });
     }
-    newCategoryIDs.push(categories._id);
+    newCategoryIDs.push(categories?._id);
   }
 
   return newCategoryIDs;

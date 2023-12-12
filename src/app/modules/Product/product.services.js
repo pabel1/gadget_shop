@@ -17,7 +17,7 @@ const { productSearchableFields } = require("./product.constant");
 const createProductIntoDB = async (payload) => {
   let { category, subCategory, tags, product } = payload;
 
-  const compositeKey = `p-${product?.productName.substring(0, 5)}-${
+  const compositeKey = `p-${product?.productName?.substring(0, 5)}-${
     product?.productPrice
   }`;
   // Check if a product with the same compositeKey exists

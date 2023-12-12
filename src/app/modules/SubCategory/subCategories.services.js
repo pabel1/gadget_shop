@@ -92,7 +92,9 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
 const createSubCategories = async (session, subCategory) => {
   const newSubCategoryIDs = [];
 
+  console.log(subCategory);
   for (const element of subCategory) {
+    console.log(element);
     let subcategory;
     if (element._id) {
       subcategory = await SubcategoriesModel.findById(element._id);
@@ -107,7 +109,7 @@ const createSubCategories = async (session, subCategory) => {
       const newSubCategory = new SubcategoriesModel(element);
       subcategory = await newSubCategory.save({ session });
     }
-    newSubCategoryIDs.push(subcategory._id);
+    newSubCategoryIDs.push(subcategory?._id);
   }
 
   return newSubCategoryIDs;

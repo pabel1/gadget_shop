@@ -8,16 +8,25 @@ const productConstant = require("./product.constant");
 const paginationFields = require("../../../constant/pagination");
 const validateRequest = require("../../../Middleware/validateRequest");
 const JoiProductValidationSchema = require("./product.validation");
+const dataFormaterMiddleware = require("../../../Middleware/dataFormaterMiddleware");
+const { parseArrayFields } = require("../../../Helper/parseArrayHelper");
+const parseArrayHelper = require("../../../Helper/parseArrayHelper");
 
 const createProduct = catchAsyncError(async (req, res) => {
-  const file = req.file;
-  console.log(JSON.parse(req.body.category));
   // if image ned to upload cloudinary then
-  console.log("controller ");
 
-  JoiProductValidationSchema.createProductValidationSchema.validate(req.body);
-  // await uploadAndSetImage(req, file, folderName);
+  parseArrayHelper.parseArrayFields(req, productConstant.parseAbleField);
 
+  let product = {
+    productName: req.body.productName,
+    productPrice: req.body.productPrice,
+    discount: req.body.discount,
+    productDescription: req.body.productDescription,
+    productDetails: req.body.productDetails,
+  };
+  if (!req.body.product || req.body.product.length === 0) {
+    req.body.product = product;
+  }
   const result = await productServices.createProductIntoDB(req.body);
 
   sendResponse(res, {
