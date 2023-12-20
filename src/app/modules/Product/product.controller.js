@@ -7,9 +7,8 @@ const pick = require("../../../shared/pick");
 const productConstant = require("./product.constant");
 const paginationFields = require("../../../constant/pagination");
 const validateRequest = require("../../../Middleware/validateRequest");
-const JoiProductValidationSchema = require("./product.validation");
 const dataFormaterMiddleware = require("../../../Middleware/dataFormaterMiddleware");
-const { parseArrayFields } = require("../../../Helper/parseArrayHelper");
+
 const parseArrayHelper = require("../../../Helper/parseArrayHelper");
 
 const createProduct = catchAsyncError(async (req, res) => {
