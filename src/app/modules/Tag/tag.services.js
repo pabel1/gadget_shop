@@ -5,6 +5,7 @@ const JoiTagValidationSchema = require("./tag.validation");
 const {
   compositeKeyGenerator,
 } = require("../../../Helper/compositeKeyGenerator");
+const { default: mongoose } = require("mongoose");
 
 const createTagIntoDB = async (payload) => {
   const isExist = await TagModel.findOne({
@@ -23,13 +24,13 @@ const createTagIntoDB = async (payload) => {
 };
 
 const createTag = async (session, tags) => {
-  const newTagsIDs = [];
+  let newTagsIDs = [];
 
   if (tags && Array.isArray(tags)) {
     for (const element of tags) {
       let tag;
-      if (element._id) {
-        tag = await TagModel.findById(element._id);
+      if (element?._id) {
+        tag = await TagModel.findById(element?._id);
       } else {
         const { error } =
           JoiTagValidationSchema.createTagValidationSchema.validate(element);
@@ -48,10 +49,10 @@ const createTag = async (session, tags) => {
         const newTag = new TagModel(element);
         tag = await newTag.save({ session });
       }
-      newTagsIDs.push(tag._id);
+      newTagsIDs.push(tag?._id.toString());
     }
   }
-
+  newTagsIDs = newTagsIDs.filter((id) => mongoose.Types.ObjectId.isValid(id));
   return newTagsIDs;
 };
 

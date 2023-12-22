@@ -15,8 +15,9 @@ const { sortingHelper } = require("../../../Helper/sortingHelper");
 const { productSearchableFields } = require("./product.constant");
 
 const createProductIntoDB = async (payload) => {
-  let { category, subCategory, tags, product } = payload;
+  let { category, subCategory, productTags, product } = payload;
 
+  console.log("tags", productTags);
   const compositeKey = `p-${product?.productName?.substring(0, 5)}-${
     product?.productPrice
   }`;
@@ -47,7 +48,7 @@ const createProductIntoDB = async (payload) => {
     );
 
     // tagCreation
-    const newTagsIDs = await tagServices.createTag(session, tags);
+    const newTagsIDs = await tagServices.createTag(session, productTags);
 
     console.log(newSubCategoryIDs);
     console.log(newCategoryIDs);
