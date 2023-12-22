@@ -63,7 +63,6 @@ const createCategoriesIntoDB = async (payload) => {
 const createCategories = async (session, category, newSubCategoryIDs) => {
   let newCategoryIDs = [];
   console.log("newSubCategoryIDs", newSubCategoryIDs);
-  // const cleanedSubCategory = newSubCategoryIDs.filter((id) => id);
   for (const element of category) {
     element.subCategory = newSubCategoryIDs;
     console.log({ CategoriesSub: element.subCategory });
