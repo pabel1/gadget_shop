@@ -11,8 +11,6 @@ const dataFormaterMiddleware = require("../../../Middleware/dataFormaterMiddlewa
 const parseArrayHelper = require("../../../Helper/parseArrayHelper");
 
 const createProduct = catchAsyncError(async (req, res) => {
-  // if image ned to upload cloudinary then
-
   parseArrayHelper.parseArrayFields(req, productConstant.parseAbleField);
 
   let product = {
