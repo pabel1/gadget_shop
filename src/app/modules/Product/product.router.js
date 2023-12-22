@@ -16,7 +16,7 @@ router.post(
   //   imageUploadFields.map((item) => ({ name: item, maxCount: 20 }))
   // ),
 
-  UploadImageCloudinary.array("product_image", 20),
+  UploadImageCloudinary.fields([{ name: "product_image", maxCount: 10 }]),
   productController.createProduct
 );
 

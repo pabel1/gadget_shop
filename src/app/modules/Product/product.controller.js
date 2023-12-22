@@ -19,12 +19,16 @@ const createProduct = catchAsyncError(async (req, res) => {
     discount: req.body.discount,
     productDescription: req.body.productDescription,
     productDetails: req.body.productDetails,
+    productImage: req?.files?.product_image?.map((file) => ({
+      url: file.path,
+      public_id: file.filename,
+    })),
   };
   if (!req.body.product || req.body.product.length === 0) {
     req.body.product = product;
   }
 
-  console.log(req.files.product_image);
+  console.log("Product Image", req.files.product_image);
   const result = await productServices.createProductIntoDB(req.body);
 
   sendResponse(res, {
