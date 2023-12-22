@@ -24,10 +24,12 @@ const categoriesValidationSchema = Joi.object({
   discount: Joi.boolean().messages({
     "boolean.base": "Discount must be a boolean.",
   }),
-  // subCategory: Joi.array().items(Joi.string().guid()).messages({
-  //   "array.base": "SubCategory must be an array.",
-  //   "array.includesRequiredUnknowns": "SubCategory contains invalid values.",
-  // }),
+  subCategory: Joi.array()
+    .items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/))
+    .messages({
+      "array.base": "SubCategory must be an array.",
+      "array.includesRequiredUnknowns": "SubCategory contains invalid values.",
+    }),
 });
 const JoiCategoriesValidationSchema = {
   categoriesValidationSchema,

@@ -8,7 +8,6 @@ const productConstant = require("./product.constant");
 const paginationFields = require("../../../constant/pagination");
 const validateRequest = require("../../../Middleware/validateRequest");
 const dataFormaterMiddleware = require("../../../Middleware/dataFormaterMiddleware");
-
 const parseArrayHelper = require("../../../Helper/parseArrayHelper");
 
 const createProduct = catchAsyncError(async (req, res) => {
@@ -26,6 +25,8 @@ const createProduct = catchAsyncError(async (req, res) => {
   if (!req.body.product || req.body.product.length === 0) {
     req.body.product = product;
   }
+
+  console.log(req.files.product_image);
   const result = await productServices.createProductIntoDB(req.body);
 
   sendResponse(res, {

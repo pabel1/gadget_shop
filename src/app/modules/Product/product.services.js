@@ -49,10 +49,27 @@ const createProductIntoDB = async (payload) => {
     // tagCreation
     const newTagsIDs = await tagServices.createTag(session, tags);
 
+    console.log(newSubCategoryIDs);
+    console.log(newCategoryIDs);
+    console.log(newTagsIDs);
+
+    // clean others array
+    // let cleanNewSubCategoryIDs = newSubCategoryIDs?.filter((id) =>
+    //   mongoose.Types.ObjectId.isValid(id)
+    // );
+    // let cleanNewCategoryIDs = newCategoryIDs?.filter((id) =>
+    //   mongoose.Types.ObjectId.isValid(id)
+    // );
+    // let cleanNewTagsIDs = newTagsIDs?.filter((id) =>
+    //   mongoose.Types.ObjectId.isValid(id)
+    // );
     // Product creation
+
     product.category = newCategoryIDs;
     product.subCategory = newSubCategoryIDs;
     product.productTags = newTagsIDs;
+
+    console.log(product);
     const newProduct = await createProduct(session, product);
 
     await session.commitTransaction();
@@ -67,6 +84,7 @@ const createProductIntoDB = async (payload) => {
 };
 
 const createProduct = async (session, product) => {
+  console.log({ product: product });
   const { error } =
     JoiProductValidationSchema.createProductValidationSchema.validate(product);
   if (error) {

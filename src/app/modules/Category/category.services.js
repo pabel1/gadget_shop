@@ -61,14 +61,17 @@ const createCategoriesIntoDB = async (payload) => {
   }
 };
 const createCategories = async (session, category, newSubCategoryIDs) => {
-  const newCategoryIDs = [];
-
+  let newCategoryIDs = [];
+  console.log("newSubCategoryIDs", newSubCategoryIDs);
+  // const cleanedSubCategory = newSubCategoryIDs.filter((id) => id);
   for (const element of category) {
     element.subCategory = newSubCategoryIDs;
+    console.log({ CategoriesSub: element.subCategory });
     let categories;
     if (element._id) {
       categories = await CategoriesModel.findById(element._id);
     } else {
+      console.log("categoris_element:", element);
       const { error } =
         JoiCategoriesValidationSchema.categoriesValidationSchema.validate(
           element
@@ -76,11 +79,16 @@ const createCategories = async (session, category, newSubCategoryIDs) => {
       if (error) {
         throw new ErrorHandler(error, httpStatus.BAD_REQUEST);
       }
+
       const newCategory = new CategoriesModel(element);
       categories = await newCategory.save({ session });
     }
-    newCategoryIDs.push(categories?._id);
+    newCategoryIDs.push(categories?._id.toString());
   }
+
+  newCategoryIDs = newCategoryIDs.filter((id) =>
+    mongoose.Types.ObjectId.isValid(id)
+  );
 
   return newCategoryIDs;
 };

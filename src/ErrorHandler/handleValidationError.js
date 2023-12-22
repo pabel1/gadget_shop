@@ -1,5 +1,5 @@
 const handleValidationError = (error) => {
-  const errorMessages = error.details.map((detail) => ({
+  const errorMessages = error?.details?.map((detail) => ({
     field: detail.context.key,
     message: detail.message,
   }));

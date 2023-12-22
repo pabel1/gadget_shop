@@ -67,11 +67,11 @@ const productSchema = new mongoose.Schema(
     compositeKey: {
       type: String,
       unique: true, // Ensures uniqueness of the composite key
-      required: true,
+      // required: true,
     },
     slug: {
       type: String,
-      required: true,
+      // required: true,
       lowercase: true,
       unique: true,
     },
@@ -85,7 +85,9 @@ const productSchema = new mongoose.Schema(
 // composite key created for uniqueness
 productSchema.pre("save", function (next) {
   const truncatedName = this.productName.substring(0, 5); // Truncate product name to at most 5 characters
-  this.compositeKey = `p-${truncatedName}-${this.productPrice}`;
+  this.compositeKey = `p-${truncatedName.trim()}-${this.productPrice
+    .toString()
+    .trim()}`;
 
   if (this.isModified("productName") || this.isNew) {
     this.slug = generateSlug(this.productName);

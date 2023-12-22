@@ -25,29 +25,31 @@ const createTagIntoDB = async (payload) => {
 const createTag = async (session, tags) => {
   const newTagsIDs = [];
 
-  for (const element of tags) {
-    let tag;
-    if (element._id) {
-      tag = await TagModel.findById(element._id);
-    } else {
-      const { error } =
-        JoiTagValidationSchema.createTagValidationSchema.validate(element);
-      if (error) {
-        throw new ErrorHandler(error, httpStatus.BAD_REQUEST);
-      }
+  if (tags && Array.isArray(tags)) {
+    for (const element of tags) {
+      let tag;
+      if (element._id) {
+        tag = await TagModel.findById(element._id);
+      } else {
+        const { error } =
+          JoiTagValidationSchema.createTagValidationSchema.validate(element);
+        if (error) {
+          throw new ErrorHandler(error, httpStatus.BAD_REQUEST);
+        }
 
-      //   generate compositeKey
-      const { tagFor, tagTitle } = element || {};
-      const compositeKey = compositeKeyGenerator.generateCompositKey({
-        keyFor: "product",
-        tagFor,
-        tagTitle,
-      });
-      element.tagCompositKey = compositeKey;
-      const newTag = new TagModel(element);
-      tag = await newTag.save({ session });
+        //   generate compositeKey
+        const { tagFor, tagTitle } = element || {};
+        const compositeKey = compositeKeyGenerator.generateCompositKey({
+          keyFor: "product",
+          tagFor,
+          tagTitle,
+        });
+        element.tagCompositKey = compositeKey;
+        const newTag = new TagModel(element);
+        tag = await newTag.save({ session });
+      }
+      newTagsIDs.push(tag._id);
     }
-    newTagsIDs.push(tag._id);
   }
 
   return newTagsIDs;
