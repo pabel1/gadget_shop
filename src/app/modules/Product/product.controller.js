@@ -1,15 +1,11 @@
 const httpStatus = require("http-status");
 const catchAsyncError = require("../../../ErrorHandler/catchAsyncError");
-const uploadAndSetImage = require("../../../shared/uploadNeededServices");
 const sendResponse = require("../../../shared/sendResponse");
 const productServices = require("./product.services");
 const pick = require("../../../shared/pick");
 const productConstant = require("./product.constant");
 const paginationFields = require("../../../constant/pagination");
-const validateRequest = require("../../../Middleware/validateRequest");
-const dataFormaterMiddleware = require("../../../Middleware/dataFormaterMiddleware");
 const parseArrayHelper = require("../../../Helper/parseArrayHelper");
-
 const createProduct = catchAsyncError(async (req, res) => {
   parseArrayHelper.parseArrayFields(req, productConstant.parseAbleField);
 
@@ -27,7 +23,6 @@ const createProduct = catchAsyncError(async (req, res) => {
   if (!req.body.product || req.body.product.length === 0) {
     req.body.product = product;
   }
-
   console.log("Product Image", req.files.product_image);
   const result = await productServices.createProductIntoDB(req.body);
 
