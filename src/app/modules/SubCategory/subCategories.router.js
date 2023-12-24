@@ -5,13 +5,14 @@ const validateRequest = require("../../../Middleware/validateRequest");
 const JoiSubCategoriesValidationSchema = require("./subCategories.validation");
 const subCategoriesController = require("./subCategories.controller");
 const authVerification = require("../../../Middleware/authVarification");
+const { UploadImageCloudinary } = require("../../../Middleware/upload");
 
 const router = express.Router();
 
 router.post(
   "/create",
-  authVerification,
-  FileUploadHelper.upload.single("image"),
+  // authVerification,
+  UploadImageCloudinary.single("subcategory_image"),
   validateRequest(
     JoiSubCategoriesValidationSchema.createSubCategoriesValidationSchema
   ),

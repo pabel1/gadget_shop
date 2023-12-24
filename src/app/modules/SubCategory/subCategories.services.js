@@ -9,10 +9,12 @@ const { filteringHelper } = require("../../../Helper/filteringHelper");
 const { sortingHelper } = require("../../../Helper/sortingHelper");
 const JoiSubCategoriesValidationSchema = require("./subCategories.validation");
 const { default: mongoose } = require("mongoose");
+const generateSlug = require("../../../shared/generateSlug");
 
 const createSubCategoriesIntoDB = async (payload) => {
+  const subCategorySlug = generateSlug(payload?.subcategoryName);
   const isExist = await SubcategoriesModel.findOne({
-    subcategoryName: payload?.subcategoryName,
+    slug: subCategorySlug,
   });
   if (isExist) {
     throw new ErrorHandler(

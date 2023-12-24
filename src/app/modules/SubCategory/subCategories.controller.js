@@ -8,12 +8,15 @@ const subCategoriesConstant = require("./subCategories.constant");
 const paginationFields = require("../../../constant/pagination");
 
 const createSubCategories = catchAsyncError(async (req, res) => {
-  const file = req.file;
-
+  console.log(req?.file);
   // if image ned to upload cloudinary then
-  const folderName = "SubCategories";
-  await uploadAndSetImage(req, file, folderName);
-
+  if (req?.file) {
+    req.body.photo = {
+      secure_url: req.file.path,
+      public_id: req.file.filename,
+    };
+  }
+  console.log(req.body);
   const result = await SubCategoriesServices.createSubCategoriesIntoDB(
     req.body
   );

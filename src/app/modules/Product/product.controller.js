@@ -23,7 +23,7 @@ const createProduct = catchAsyncError(async (req, res) => {
   if (!req.body.product || req.body.product.length === 0) {
     req.body.product = product;
   }
-  console.log("Product Image", req.files.product_image);
+
   const result = await productServices.createProductIntoDB(req.body);
 
   sendResponse(res, {

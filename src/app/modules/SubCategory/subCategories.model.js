@@ -30,12 +30,12 @@ const subcategoriesSchema = new mongoose.Schema(
       type: Boolean,
     },
 
-    product: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    ],
+    // product: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Product",
+    //   },
+    // ],
   },
   {
     timestamps: true,
