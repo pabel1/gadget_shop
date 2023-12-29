@@ -103,7 +103,6 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
   if (dynamicFilter && dynamicFilter.length) {
     match.$and = dynamicFilter;
   }
-
   // if join projection and otherneeded for before match ar unshift then write here
 
   if (skip) {
@@ -133,7 +132,6 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
   }
   const result = await CategoriesModel.aggregate(pipeline);
   const total = await CategoriesModel.aggregate(totalPipeline);
-
   return {
     meta: {
       page,
