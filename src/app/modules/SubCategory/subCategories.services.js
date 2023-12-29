@@ -35,7 +35,7 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
 
   const pipeline = [];
   const totalPipeline = [{ $count: "count" }];
-  const matchAnd = [];
+  const match = {};
 
   //?Dynamic search added
   const dynamicSearchQuery = searchHelper.createSearchQuery(
@@ -43,14 +43,13 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
     subCategorySearchableFields
   );
 
-  if (dynamicSearchQuery) {
-    matchAnd.push(dynamicSearchQuery);
+  if (dynamicSearchQuery && dynamicSearchQuery.length) {
+    match.$or = dynamicSearchQuery;
   }
   // ? Dynamic filtering added
   const dynamicFilter = filteringHelper.createDynamicFilter(filtersData);
-
-  if (dynamicFilter) {
-    matchAnd.push(dynamicFilter);
+  if (dynamicFilter && dynamicFilter.length) {
+    match.$and = dynamicFilter;
   }
   if (skip) {
     pipeline.push({ $skip: skip });
@@ -70,13 +69,12 @@ const getAllSubCategoryFromDB = async (filters, paginationOptions) => {
   }
 
   // if join projection and otherneeded for before match ar unshift then write here
-
-  if (matchAnd.length) {
+  if (Object.keys(match).length) {
     pipeline.unshift({
-      $match: { $and: matchAnd },
+      $match: match,
     });
     totalPipeline.unshift({
-      $match: { $and: matchAnd },
+      $match: match,
     });
   }
   const result = await SubcategoriesModel.aggregate(pipeline);
