@@ -5,17 +5,20 @@ const tagCompositConstant = {
 };
 
 const tagsFilterableFields = [
-  "categoryName",
+  "tagFor",
   "categoryTag",
-  "slug",
-  "searchTerm",
-  "discount",
+  "tagTitle",
+  "tagCompositKey",
   "_id",
 ];
 
-const tagsSearchableFields = ["categoryName", "categoryTag", "slug"];
+const tagsSearchableFields = [
+  "tagFor",
+  "categoryTag",
+  "tagTitle",
+  "tagCompositKey",
+];
 
-module.exports = tagConstant;
 const tagConstant = {
   tagCompositConstant,
   tagsFilterableFields,
