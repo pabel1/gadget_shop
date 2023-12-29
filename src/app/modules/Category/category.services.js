@@ -87,7 +87,7 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
 
   const pipeline = [];
   const totalPipeline = [{ $count: "count" }];
-  const matchAnd = [];
+  const match = {};
 
   //?Dynamic search added
   const dynamicSearchQuery = searchHelper.createSearchQuery(
@@ -95,17 +95,17 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
     categoriesConstant.categorySearchableFields
   );
 
-  console.log("dynamicSearchQuery:", dynamicSearchQuery);
-
-  if (dynamicSearchQuery) {
-    matchAnd.push(dynamicSearchQuery);
+  if (dynamicSearchQuery && dynamicSearchQuery.length) {
+    match.$or = dynamicSearchQuery;
   }
   // ? Dynamic filtering added
   const dynamicFilter = filteringHelper.createDynamicFilter(filtersData);
-  console.log("dynamicFilter:", dynamicFilter);
-  if (dynamicFilter) {
-    matchAnd.push(dynamicFilter);
+  if (dynamicFilter && dynamicFilter.length) {
+    match.$and = dynamicFilter;
   }
+
+  // if join projection and otherneeded for before match ar unshift then write here
+
   if (skip) {
     pipeline.push({ $skip: skip });
   }
@@ -123,14 +123,12 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
     });
   }
 
-  // if join projection and otherneeded for before match ar unshift then write here
-
-  if (matchAnd.length) {
+  if (Object.keys(match).length) {
     pipeline.unshift({
-      $match: { $and: matchAnd },
+      $match: match,
     });
     totalPipeline.unshift({
-      $match: { $and: matchAnd },
+      $match: match,
     });
   }
   const result = await CategoriesModel.aggregate(pipeline);

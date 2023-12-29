@@ -4,10 +4,10 @@ const createDynamicFilter = (filtersData) => {
       [field]: value,
     }));
 
-    return { $and: filter };
+    return filter;
   } else {
     // Return an empty filter if no filters are provided
-    return {};
+    return [];
   }
 };
 

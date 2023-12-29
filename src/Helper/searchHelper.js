@@ -6,15 +6,14 @@ const createSearchQuery = (searchTerm, searchableFields) => {
       $options: "i",
     };
 
-    const searchQuery = {
-      $or: searchableFields.map((field) => ({
-        [field]: searchRegex,
-      })),
-    };
+    const searchQuery = searchableFields.map((field) => ({
+      [field]: searchRegex,
+    }));
+
     return searchQuery;
   } else {
     // Return an empty query if searchTerm is not provided
-    return {};
+    return [];
   }
 };
 
