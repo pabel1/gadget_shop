@@ -2,6 +2,7 @@ const subCategoryFilterableFields = [
   "subcategoryName",
   "subcategoryTag",
   "status",
+  "_id",
 ];
 
 const subCategorySearchableFields = ["subcategoryName", "subcategoryTag"];
