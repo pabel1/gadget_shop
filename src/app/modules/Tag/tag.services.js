@@ -6,6 +6,12 @@ const {
   compositeKeyGenerator,
 } = require("../../../Helper/compositeKeyGenerator");
 const { default: mongoose } = require("mongoose");
+const { paginationHelpers } = require("../../../Helper/paginationHelper");
+const { searchHelper } = require("../../../Helper/searchHelper");
+const { tagCompositConstant } = require("./tag.constant");
+const tagConstant = require("./tag.constant");
+const { filteringHelper } = require("../../../Helper/filteringHelper");
+const { sortingHelper } = require("../../../Helper/sortingHelper");
 
 const createTagIntoDB = async (payload) => {
   const isExist = await TagModel.findOne({
@@ -69,7 +75,7 @@ const getAllTagsFromDB = async (filters, paginationOptions) => {
   //?Dynamic search added
   const dynamicSearchQuery = searchHelper.createSearchQuery(
     searchTerm,
-    categoriesConstant.categorySearchableFields
+    tagConstant.tagsSearchableFields
   );
 
   if (dynamicSearchQuery && dynamicSearchQuery.length) {
@@ -80,7 +86,7 @@ const getAllTagsFromDB = async (filters, paginationOptions) => {
   if (dynamicFilter && dynamicFilter.length) {
     match.$and = dynamicFilter;
   }
-  console.log(dynamicFilter);
+
   // if join projection and otherneeded for before match ar unshift then write here
 
   if (skip) {
@@ -108,8 +114,8 @@ const getAllTagsFromDB = async (filters, paginationOptions) => {
       $match: match,
     });
   }
-  const result = await CategoriesModel.aggregate(pipeline);
-  const total = await CategoriesModel.aggregate(totalPipeline);
+  const result = await TagModel.aggregate(pipeline);
+  const total = await TagModel.aggregate(totalPipeline);
   return {
     meta: {
       page,
