@@ -1,8 +1,29 @@
+const { default: mongoose } = require("mongoose");
+
+const handleSpecialCondition = (field, value) => {
+  if (field === "_id") {
+    if (Array.isArray(value)) {
+      const orArray = value.map((item) => ({
+        [field]: new mongoose.Types.ObjectId(item),
+      }));
+      return { $or: orArray };
+    } else {
+      return { [field]: new mongoose.Types.ObjectId(value) };
+    }
+  }
+  // Add more special conditions for other fields if needed
+  // else if (field === "anotherField") {
+  //   // handle another special condition
+  // }
+  // Default case: return a standard filter
+  return { [field]: value };
+};
+
 const createDynamicFilter = (filtersData) => {
   if (Object.keys(filtersData).length) {
-    const filter = Object.entries(filtersData).map(([field, value]) => ({
-      [field]: value,
-    }));
+    const filter = Object.entries(filtersData).map(([field, value]) => {
+      return handleSpecialCondition(field, value);
+    });
 
     return filter;
   } else {

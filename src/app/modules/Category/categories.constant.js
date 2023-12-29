@@ -9,6 +9,7 @@ const categoryFilterableFields = [
   "slug",
   "searchTerm",
   "discount",
+  "_id",
 ];
 
 const categorySearchableFields = ["categoryName", "categoryTag", "slug"];

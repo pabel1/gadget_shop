@@ -103,6 +103,7 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
   if (dynamicFilter && dynamicFilter.length) {
     match.$and = dynamicFilter;
   }
+  console.log(dynamicFilter);
   // if join projection and otherneeded for before match ar unshift then write here
 
   if (skip) {
