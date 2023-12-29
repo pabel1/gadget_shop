@@ -2,55 +2,42 @@ const httpStatus = require("http-status");
 const ErrorHandler = require("../../../ErrorHandler/errorHandler");
 const CategoriesModel = require("./category.model");
 const { default: mongoose } = require("mongoose");
-const SubcategoriesModel = require("../SubCategory/subCategories.model");
+
 const JoiCategoriesValidationSchema = require("./categories.validation");
+const generateSlug = require("../../../shared/generateSlug");
+const SubCategoriesServices = require("../SubCategory/subCategories.services");
+const { paginationHelpers } = require("../../../Helper/paginationHelper");
+const { searchHelper } = require("../../../Helper/searchHelper");
+const categoriesConstant = require("./categories.constant");
+const { filteringHelper } = require("../../../Helper/filteringHelper");
+const { sortingHelper } = require("../../../Helper/sortingHelper");
 
-const createCategoriesIntoDB = async (payload) => {
+const createIndividualCategoriesIntoDB = async (payload) => {
+  const categorySlug = generateSlug(payload?.categoryName);
+  const isExist = await CategoriesModel.findOne({
+    slug: categorySlug,
+  });
+  if (isExist) {
+    throw new ErrorHandler(
+      `${isExist.categoryName} this category already exist!`,
+      httpStatus.CONFLICT
+    );
+  }
+  let { subCategory } = payload;
+
   const session = await mongoose.startSession();
-
   try {
     session.startTransaction();
+    // SubCategory creation
+    const newSubCategoryIDs = await SubCategoriesServices.createSubCategories(
+      session,
+      subCategory
+    );
 
-    const { categoryName, subCategory } = payload;
-    console.log(subCategory, "subCategory");
-
-    // Check if the category with the same name already exists
-    const isExist = await CategoriesModel.findOne({ categoryName });
-    if (isExist) {
-      throw new ErrorHandler(
-        `${categoryName} this category already exists!`,
-        httpStatus.CONFLICT
-      );
-    }
-    const newSubCategoryIDs = [];
-
-    console.log(Array.isArray(subCategory));
-
-    for (const element of subCategory) {
-      let subcategory;
-
-      // Check if the element has an _id (ObjectID) property
-      if (element._id) {
-        // Subcategory already exists, so just add its ObjectID to the category
-        subcategory = await SubcategoriesModel.findById(element._id);
-      } else {
-        // Subcategory doesn't exist, so create a new subcategory
-        const newSubCategory = new SubcategoriesModel(element);
-        subcategory = await newSubCategory.save({ session });
-      }
-
-      // Add the subcategory's ObjectID to the category's subCategory array
-      newSubCategoryIDs.push(subcategory?._id);
-    }
-
-    if (newSubCategoryIDs.length !== 0) {
-      payload.subCategory = newSubCategoryIDs;
-    }
-    const category = new CategoriesModel(payload);
-    const newCategory = await category.save({ session });
-
+    payload.subCategory = newSubCategoryIDs;
+    const categories = new CategoriesModel(payload);
+    const newCategory = await categories.save({ session });
     await session.commitTransaction();
-
     return newCategory;
   } catch (error) {
     await session.abortTransaction();
@@ -91,8 +78,76 @@ const createCategories = async (session, category, newSubCategoryIDs) => {
 
   return newCategoryIDs;
 };
+
+const getAllCategoryFromDB = async (filters, paginationOptions) => {
+  const { searchTerm, ...filtersData } = filters;
+  console.log("filtersData", filtersData);
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const pipeline = [];
+  const totalPipeline = [{ $count: "count" }];
+  const matchAnd = [];
+
+  //?Dynamic search added
+  const dynamicSearchQuery = searchHelper.createSearchQuery(
+    searchTerm,
+    categoriesConstant.categorySearchableFields
+  );
+
+  console.log("dynamicSearchQuery:", dynamicSearchQuery);
+
+  if (dynamicSearchQuery) {
+    matchAnd.push(dynamicSearchQuery);
+  }
+  // ? Dynamic filtering added
+  const dynamicFilter = filteringHelper.createDynamicFilter(filtersData);
+  console.log("dynamicFilter:", dynamicFilter);
+  if (dynamicFilter) {
+    matchAnd.push(dynamicFilter);
+  }
+  if (skip) {
+    pipeline.push({ $skip: skip });
+  }
+
+  if (limit) {
+    pipeline.push({ $limit: limit });
+  }
+
+  // sorting
+  const dynamicSorting = sortingHelper.createDynamicSorting(sortBy, sortOrder);
+
+  if (dynamicSorting) {
+    pipeline.push({
+      $sort: dynamicSorting,
+    });
+  }
+
+  // if join projection and otherneeded for before match ar unshift then write here
+
+  if (matchAnd.length) {
+    pipeline.unshift({
+      $match: { $and: matchAnd },
+    });
+    totalPipeline.unshift({
+      $match: { $and: matchAnd },
+    });
+  }
+  const result = await CategoriesModel.aggregate(pipeline);
+  const total = await CategoriesModel.aggregate(totalPipeline);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total: total[0]?.count,
+    },
+    data: result,
+  };
+};
 const CategoriesServices = {
-  createCategoriesIntoDB,
+  createIndividualCategoriesIntoDB,
   createCategories,
+  getAllCategoryFromDB,
 };
 module.exports = CategoriesServices;

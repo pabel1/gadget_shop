@@ -24,12 +24,13 @@ const categoriesValidationSchema = Joi.object({
   discount: Joi.boolean().messages({
     "boolean.base": "Discount must be a boolean.",
   }),
-  subCategory: Joi.array()
-    .items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/))
-    .messages({
-      "array.base": "SubCategory must be an array.",
-      "array.includesRequiredUnknowns": "SubCategory contains invalid values.",
-    }),
+  subCategory: Joi.array().items(Joi.string().hex().length(24)).messages({
+    "array.base": "Subcategories must be an array.",
+    "array.includesRequiredUnknowns":
+      "Subcategories must be an array of valid ObjectId strings.",
+    "string.hex": "Each element in the array must be a hexadecimal string.",
+    "string.length": "Each ObjectId string must be 24 characters long.",
+  }),
 });
 const JoiCategoriesValidationSchema = {
   categoriesValidationSchema,
