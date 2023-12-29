@@ -1,5 +1,4 @@
 const { default: mongoose } = require("mongoose");
-
 const handleSpecialCondition = (field, value) => {
   if (field === "_id") {
     if (Array.isArray(value)) {
