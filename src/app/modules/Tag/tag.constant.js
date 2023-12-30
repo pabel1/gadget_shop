@@ -22,6 +22,7 @@ const tagsSearchableFields = [
 const tagConstant = {
   tagCompositConstant,
   tagsFilterableFields,
+  
   tagsSearchableFields,
 };
 module.exports = tagConstant;
