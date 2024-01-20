@@ -26,10 +26,6 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // brandId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Brand",
-    // },
 
     productImage: [imageSchema],
     productDescription: {
