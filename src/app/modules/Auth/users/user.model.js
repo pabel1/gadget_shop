@@ -21,7 +21,6 @@ const userSchema = mongoose.Schema(
     photo: {
       public_id: {
         type: String,
-        // required: true,
       },
       secure_url: {
         type: String,
