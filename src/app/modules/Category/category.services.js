@@ -131,6 +131,7 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
       $match: match,
     });
   }
+
   const result = await CategoriesModel.aggregate(pipeline);
   const total = await CategoriesModel.aggregate(totalPipeline);
   return {
@@ -142,6 +143,7 @@ const getAllCategoryFromDB = async (filters, paginationOptions) => {
     data: result,
   };
 };
+
 const CategoriesServices = {
   createIndividualCategoriesIntoDB,
   createCategories,
