@@ -11,7 +11,6 @@ const categoriesSchema = new mongoose.Schema(
     photo: {
       secure_url: {
         type: String,
-        // required: true,
       },
       public_id: {
         type: String,
