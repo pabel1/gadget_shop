@@ -1,8 +1,6 @@
 /* eslint-disable node/no-extraneous-require */
 const express = require("express");
 
-const validateRequest = require("../../../Middleware/validateRequest");
-
 const categoriesController = require("./category.controller");
 const { UploadImageCloudinary } = require("../../../Middleware/upload");
 
