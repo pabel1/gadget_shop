@@ -24,7 +24,6 @@ const userSchema = mongoose.Schema(
       },
       secure_url: {
         type: String,
-        // required: true,
       },
     },
     phone: {
