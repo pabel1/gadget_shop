@@ -2,7 +2,7 @@
 const express = require("express");
 
 const validateRequest = require("../../../Middleware/validateRequest");
-const JoiCategoriesValidationSchema = require("./categories.validation");
+
 const categoriesController = require("./category.controller");
 const { UploadImageCloudinary } = require("../../../Middleware/upload");
 
