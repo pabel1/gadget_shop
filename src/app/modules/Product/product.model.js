@@ -63,11 +63,10 @@ const productSchema = new mongoose.Schema(
     compositeKey: {
       type: String,
       unique: true,
-      // required: true,
     },
     slug: {
       type: String,
-      // required: true,
+
       lowercase: true,
       unique: true,
     },
